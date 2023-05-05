@@ -24,13 +24,28 @@ const UserSchema = new mongoose.Schema({
   gensec: {
     type: String,
   },
-  author: {
+  vicePresident: {
     type: String,
   },
   sport: {
     type: String,
   },
-});
+  social: {
+    type: String,
+  },
+  pro: {
+    type: String,
+  },
+  finsec: {
+    type: String,
+  },
+  treasurer: {
+    type: String,
+  },
+  AGS: {
+    type: String,
+  },
+}, {timestamps: true});
 
 const BIC = mongoose.model("BIC", UserSchema);
 export default BIC;

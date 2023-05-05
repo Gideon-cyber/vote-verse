@@ -1,4 +1,4 @@
-import BIC from "../models/user.js";
+import BIC from "../models/BIC.js";
 
 export const findAllUsers = async (req, res) => {
   const AllUser = await BIC.find();

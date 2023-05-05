@@ -4,7 +4,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import router from "./Routes/routes.js";
 import bicStudents from "./SampleData/sampledata.js";
-import BIC from "./models/user.js";
+import BIC from "./models/BIC.js";
+
 //define the server
 const app = express();
 

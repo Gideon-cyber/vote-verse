@@ -1,17 +1,32 @@
-import BIC from "../models/user.js";
+import BIC from "../models/BIC.js";
 
 export const UpdateThisUser = async (req, res) => {
   try {
-    const { whoToFind, canditate1, canditate2, canditate3, canditate4 } =
-      req.body;
-      console.log(req.body);
-    const filter = { matric: whoToFind };
+    const {
+      matric,
+      candidate1,
+      candidate2,
+      candidate3,
+      candidate4,
+      candidate5,
+      candidate6,
+      candidate7,
+      candidate8,
+      candidate9,
+    } = req.body;
+    console.log(req.body);
+    const filter = { matric: matric };
     const update = {
       $set: {
-        president: canditate1,
-        gensec: canditate2,
-        author: canditate3,
-        sport: canditate4,
+        president: candidate1,
+        vicePresident: candidate2,
+        sport: candidate3,
+        gensec: candidate4,
+        social: candidate5,
+        pro: candidate6,
+        finsec: candidate7,
+        treasurer: candidate8,
+        AGS: candidate9,
       },
     };
     const options = { new: true };
