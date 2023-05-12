@@ -36,10 +36,10 @@ export default function Login() {
       <TextContainer>
         <div className="w-full flex items-center lg:items-start flex-col gap-6">
           <div className="flex items-center lg:items-start gap-2 flex-col">
-            <h1 className="text-black text-[30px] lg:text-[48px] leading-[150%] font-bold">
-              Hey, Welcome back!
+            <h1 className="text-black text-[30px] lg:text-[48px] leading-[150%] font-bold text-center lg:text-left">
+              Hey, We are glad you chose Vote-Verse!
             </h1>
-            <p className="text-grey-primary">We are happy to see you back!</p>
+            <p className="text-grey-primary">Fill this form to get started</p>
           </div>
           <form
             className="flex items-start w-full gap-5 flex-col"
@@ -66,7 +66,7 @@ export default function Login() {
             />
 
             <Button
-              label="Login"
+              label="Sign up"
               type="submit"
               OnClick={() => {}}
               disabled={isSubmitting}
@@ -74,9 +74,9 @@ export default function Login() {
             />
           </form>
           <div className="text-[14px] leading-[150%] font-medium text-grey-primary tracking-[0.01em]">
-            Don't have an account?{" "}
-            <Link href="/register" className="text-blue-primary">
-              Sign up here
+            Already have an account?{" "}
+            <Link href="/login" className="text-blue-primary">
+              Login here
             </Link>
           </div>
         </div>
