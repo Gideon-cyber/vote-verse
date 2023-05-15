@@ -1,6 +1,7 @@
-import BIC from "../models/BIC.js";
+import BICS from "../models/BIC.js";
 export const VerifyUser = async (req, res) => {
   try {
+    const BIC = BICS.BIC;
     const { matric } = req.body;
     const FindUser = BIC.find({ matric: matric });
 

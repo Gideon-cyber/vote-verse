@@ -1,7 +1,8 @@
-import BIC from "../models/BIC.js";
+import BICS from "../models/BIC.js";
 
 export const UpdateThisUser = async (req, res) => {
   try {
+    const BIC = BICS.BIC;
     const {
       matric,
       candidate1,

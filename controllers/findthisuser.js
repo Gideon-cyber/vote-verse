@@ -1,8 +1,9 @@
-import BIC from "../models/BIC.js";
+import BICS from "../models/BIC.js";
 
 export const FindThisUser = async (req, res) => {
   const { parameter } = req.body;
   console.log(parameter);
+  const BIC = BICS.BIC;
   const foundThisUser = await BIC.find({
     $or: [
       { firstName: parameter },

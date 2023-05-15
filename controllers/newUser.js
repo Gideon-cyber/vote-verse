@@ -1,7 +1,8 @@
-import BIC from "../models/BIC.js";
+import BICS from "../models/BIC.js";
 
 const CreateVoter = async (req, res) => {
   try {
+    const BIC = BICS.BIC;
     const { firstName, lastName, email, matric } = req.body;
     const newVoter = await new BIC({
       firstName,
