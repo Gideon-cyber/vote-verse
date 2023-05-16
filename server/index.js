@@ -4,7 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import router from "./Routes/routes.js";
 import bicStudents from "./SampleData/sampledata.js";
-import BIC from "./models/BIC.js";
+import BICS from "./models/BIC.js";
 
 //define the server
 const app = express();
@@ -31,10 +31,11 @@ mongoose
   .then(
     app.listen(PORT, async (req, res) => {
       console.log(`Server is running on port ${PORT}`);
-      //   const loadDB = await BIC.insertMany(bicStudents);
-      //   console.log(loadDB);
-      //   const deldB = await BIC.deleteMany();
-      //   console.log(deldB);
+      const BIC = BICS.BIC
+        // const loadDB = await BIC.insertMany(bicStudents);
+        // console.log(loadDB);
+        // const deldB = await BIC.deleteMany();
+        // console.log(deldB);
     })
   )
   .then(() => console.log("DB connected"))
