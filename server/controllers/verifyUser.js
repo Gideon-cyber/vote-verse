@@ -3,11 +3,12 @@ export const VerifyUser = async (req, res) => {
   try {
     const BIC = BICS.BIC;
     const { matric } = req.body;
-    const FindUser = BIC.find({ matric: matric });
+    // console.log(matric);
+    const FindUser = await BIC.find({ matric: matric });
 
-    const FoundUser = await FindUser;
-    if (FoundUser) {
-      res.status(200).send(FoundUser);
+    if (FindUser.length != 0) {
+      console.log(FindUser);
+      res.status(200).send(FindUser);
     } else {
       res.status(404).send("No Such User Found");
     }

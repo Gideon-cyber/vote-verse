@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 
-export const nigeriaOffset = 60 * 60 * 1000 * 1;
-
-const UserSchema = new mongoose.Schema(
+const AdminSchema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
+      type: String,
+      required: [true, "Please provide a name"],
+      minlength: 3,
+      maxlength: 20,
+      trim: true,
+    },
+    lastName: {
       type: String,
       required: [true, "Please provide a name"],
       minlength: 3,
@@ -60,7 +65,7 @@ const UserSchema = new mongoose.Schema(
   },
 
   {
-    timestamps: { currentTime: () => Date.now() + nigeriaOffset },
+    timestamps: { currentTime: () => Date.now() },
   } // set timestamps to nigerian timezone
 );
-export const User = mongoose.model("User", UserSchema);
+export const Admin = mongoose.model("Admin", AdminSchema);

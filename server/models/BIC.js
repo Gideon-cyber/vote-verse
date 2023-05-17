@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
+    Accredited: {
+      type: Boolean,
+      default: null,
+    },
     firstName: {
       type: String,
       required: [true, "Please provide a name"],
@@ -12,12 +16,22 @@ const UserSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "Please provide an email"],
+      required: [true, "Must provide a valid email"],
+      unique: true,
+      validate: {
+        validator: function (value) {
+          // Regular expression pattern for email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(value);
+        },
+        message: "Please enter a valid email address",
+      },
     },
 
     matric: {
-      type: Number,
+      type: String,
       required: [true, "Please provide a matriculation number"],
+      unique: true,
     },
     president: {
       type: String,
@@ -51,7 +65,6 @@ const UserSchema = new mongoose.Schema(
 );
 
 // const BIC = mongoose.model("BIC", UserSchema);
-// // const BIC = mongoose.model(Model, UserSchema);
 // export default BIC;
 
 const modelNames = ["BIC", "PHY", "MLS"];
