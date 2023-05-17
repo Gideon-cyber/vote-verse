@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 8080;
 
 mongoose
   .connect(
-    "mongodb+srv://mongodb:UQtrtbk5AfZ4XFAh@cluster0.i9foyr2.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://mongodb:UQtrtbk5AfZ4XFAh@cluster0.i9foyr2.mongodb.net/BIC",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
