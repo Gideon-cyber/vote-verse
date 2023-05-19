@@ -9,6 +9,8 @@ import { getOTP } from "../controllers/OTP.js";
 import { VerifyOTP } from "../controllers/OTP.js";
 import CreateAdmin from "../controllers/CreateAdminAccount.js";
 import AdminLogin from "../controllers/loginAdminAccount.js";
+7;
+import { findAllCandidates } from "../controllers/findAllCandidates.js";
 const router = express.Router();
 
 router.post("/verifyUser", VerifyUser); //this is an additional route to find a user by matric only
@@ -21,5 +23,6 @@ router.post("/registerAdmin", CreateAdmin);
 router.post("/adminLogin", AdminLogin);
 router.post("/verifyotp", VerifyOTP);
 router.get("/findAllUsers", findAllUsers);
+router.get("/findAllCandidates", findAllCandidates);
 
 export default router;
