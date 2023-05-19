@@ -46,7 +46,7 @@ export const VerifyOTP = async (req, res) => {
     const { otp } = req.body;
     const foundOTP = await OTP.find({ otp });
     console.log(foundOTP);
-    if (foundOTP.length !== 0) {
+    if (foundOTP.length != 0) {
       res.status(201).send({
         message: "Verification was successful",
       });

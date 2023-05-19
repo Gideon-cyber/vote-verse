@@ -22,7 +22,8 @@ const PORT = process.env.PORT || 8080;
 
 mongoose
   .connect(
-    "mongodb+srv://mongodb:UQtrtbk5AfZ4XFAh@cluster0.i9foyr2.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://mongodb:SS6ARbOU4LiwEYAi@cluster0.i9foyr2.mongodb.net/",
+    //mongodb+srv://mongodb:SS6ARbOU4LiwEYAi@cluster0.i9foyr2.mongodb.net/?retryWrites=true&w=majority"
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -31,11 +32,11 @@ mongoose
   .then(
     app.listen(PORT, async (req, res) => {
       console.log(`Server is running on port ${PORT}`);
-      const BIC = BICS.BIC
-        // const loadDB = await BIC.insertMany(bicStudents);
-        // console.log(loadDB);
-        // const deldB = await BIC.deleteMany();
-        // console.log(deldB);
+      // const BIC = BICS.BIC;
+      // const loadDB = await BIC.insertMany(bicStudents);
+      // console.log(loadDB);
+      // const deldB = await BIC.deleteMany();
+      // console.log(deldB);
     })
   )
   .then(() => console.log("DB connected"))

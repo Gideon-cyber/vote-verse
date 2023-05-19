@@ -14,7 +14,6 @@ export const UpdateThisUser = async (req, res) => {
       candidate7,
       candidate8,
       candidate9,
-      accredited,
     } = req.body;
     console.log(req.body);
     const filter = { matric: matric };
@@ -29,7 +28,6 @@ export const UpdateThisUser = async (req, res) => {
         finsec: candidate7,
         treasurer: candidate8,
         AGS: candidate9,
-        Accredited: accredited,
       },
     };
     const options = { new: true };
