@@ -4,7 +4,7 @@ interface InputProps {
   label: string;
   type: string;
   placeholder: string;
-  value: string;
+  value?: string;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
