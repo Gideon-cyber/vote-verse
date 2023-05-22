@@ -6,6 +6,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: null,
     },
+    Voted: {
+      type: Boolean,
+      default: null,
+    },
     firstName: {
       type: String,
       required: [true, "Please provide a name"],
