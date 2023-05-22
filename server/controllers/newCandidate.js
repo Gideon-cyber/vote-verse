@@ -1,5 +1,5 @@
 import Runner from "../models/Candidate.js";
-
+import { Groups } from "../models/CandidatesGroup.js";
 const CreateNewCandidate = async (req, res) => {
   try {
     const {
@@ -12,6 +12,7 @@ const CreateNewCandidate = async (req, res) => {
       office,
       description,
     } = req.body;
+
     if (
       !firstName ||
       !lastName ||
@@ -34,8 +35,15 @@ const CreateNewCandidate = async (req, res) => {
         office,
         description,
       });
-      const registeredCandidate = await newCandidate.save();
-      res.status(201).send(registeredCandidate);
+
+      const existingCandidate = await Runner.findOne({ matric });
+      if (existingCandidate) {
+        res.status(404).send("Candidate already exist");
+      } else {
+        res.status(201).send({
+          candidate: registeredCandidate,
+        });
+      }
     }
   } catch (err) {
     console.log(err);
