@@ -16,27 +16,37 @@ export const UpdateThisUser = async (req, res) => {
       candidate9,
     } = req.body;
     console.log(req.body);
-    const filter = { matric: matric };
-    const update = {
-      $set: {
-        president: candidate1,
-        vicePresident: candidate2,
-        sport: candidate3,
-        gensec: candidate4,
-        social: candidate5,
-        pro: candidate6,
-        finsec: candidate7,
-        treasurer: candidate8,
-        AGS: candidate9,
-      },
-    };
-    const options = { new: true };
-    const updatedUser = await BIC.findOneAndUpdate(filter, update, options);
-    console.log(updatedUser);
-    if (updatedUser) {
-      res.status(200).send(updatedUser);
+    const isVoted = await BIC.findOne({ matric });
+    console.log(isVoted);
+    if (isVoted.Voted === true) {
+      res.status(403).send({
+        message: "You have already voted",
+        status: isVoted,
+      });
     } else {
-      res.status(404).send("No Such User Found");
+      const filter = { matric: matric };
+      const update = {
+        $set: {
+          president: candidate1,
+          vicePresident: candidate2,
+          sport: candidate3,
+          gensec: candidate4,
+          social: candidate5,
+          pro: candidate6,
+          finsec: candidate7,
+          treasurer: candidate8,
+          AGS: candidate9,
+          Voted: true,
+        },
+      };
+      const options = { new: true };
+      const updatedUser = await BIC.findOneAndUpdate(filter, update, options);
+      console.log(updatedUser);
+      if (updatedUser) {
+        res.status(200).send(updatedUser);
+      } else {
+        res.status(404).send("No Such User Found");
+      }
     }
   } catch (err) {
     console.error(err);

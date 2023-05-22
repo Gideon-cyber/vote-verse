@@ -55,6 +55,7 @@ const AdminSchema = new mongoose.Schema(
       enum: ["superadmin", "admin"],
       required: true,
     },
+    registeredVoters: [],
     lastLogIn: {
       type: Date,
     },
