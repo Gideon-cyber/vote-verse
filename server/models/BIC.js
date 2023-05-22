@@ -2,7 +2,15 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+    },
     Accredited: {
+      type: Boolean,
+      default: null,
+    },
+    Voted: {
       type: Boolean,
       default: null,
     },
@@ -26,6 +34,10 @@ const UserSchema = new mongoose.Schema(
         },
         message: "Please enter a valid email address",
       },
+    },
+    role: {
+      type: String,
+      default: "voter",
     },
 
     matric: {

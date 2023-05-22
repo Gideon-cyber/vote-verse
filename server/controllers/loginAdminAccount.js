@@ -1,4 +1,5 @@
 import { Admin } from "../models/admin.js";
+import BICS from "../models/BIC.js";
 import OTP from "../models/otp.js";
 import mailer from "../config/nodemailer.js";
 
@@ -28,6 +29,7 @@ const AdminLogin = async (req, res) => {
           success: true,
           message: " Check your email for otp",
           otp: otp,
+          admin: FindThisAdmin,
         });
       } else {
         res.status(401).send("Admin not found");
@@ -41,7 +43,48 @@ const AdminLogin = async (req, res) => {
 
 export default AdminLogin;
 
-//Note, after this point,
-// direct the admin to the verify otp page,
-// if he succeeds, take him to wherever
-//he should be redirected
+export const VoterLogin = async (req, res) => {
+  const BIC = BICS.BIC;
+  const { matric, email } = req.body;
+  try {
+    if (!email || !matric) {
+      res.status(401).send("Wrong email/password");
+    } else {
+      const FindThisVoter = await BIC.findOne({
+        email: email,
+        matric: matric,
+      });
+      console.log(FindThisVoter);
+
+      if (FindThisVoter) {
+        if (FindThisVoter.Accredited === null) {
+          res.status(403).send({
+            message: "Sorry, you are not Accreditd to vote",
+          });
+        } else {
+          const min = 1000;
+          const max = 9999;
+          const otp = Math.floor(Math.random() * (max - min + 1)) + min;
+          const newOTP = await new OTP({
+            otp,
+          });
+
+          const sentOTP = await newOTP.save();
+          console.log(sentOTP);
+          mailer(email, "please Verify using the OTP code ", otp.toString());
+          return res.status(201).send({
+            success: true,
+            message: " Check your email for otp",
+            otp: otp,
+            voter: FindThisVoter,
+          });
+        }
+      } else {
+        res.status(401).send("Voter not found");
+      }
+    }
+  } catch (err) {
+    res.status(401).send(err.message);
+    console.log(err.message);
+  }
+};
