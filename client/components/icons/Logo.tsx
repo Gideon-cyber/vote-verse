@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 function Logo({ fill = "#3B81F6", ...rest }) {

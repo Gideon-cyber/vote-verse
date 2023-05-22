@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 function CollapsIcon({ fill = "#6C7281", ...rest }) {

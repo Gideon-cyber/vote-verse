@@ -4,22 +4,39 @@ import classNames from "classnames";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import React, { useState, useMemo } from "react";
+import {
+  ArticleIcon,
+  CollapsIcon,
+  HomeIcon,
+  LogoIcon,
+  LogoutIcon,
+  UsersIcon,
+  VideosIcon,
+  PersonIcon,
+} from "../icons";
 
 interface menuItemType {
   id: number;
   label: string;
   link: string;
+  icon: any;
 }
 
 const menuItems: menuItemType[] = [
-  { id: 1, label: "Home", link: "/" },
-  { id: 2, label: "Manage Posts", link: "/posts" },
-  { id: 3, label: "Manage Users", link: "/users" },
-  { id: 4, label: "Manage Tutorials", link: "/tutorials" },
+  //   { id: 1, label: "Home", icon: HomeIcon, link: "/" },
+  { id: 1, label: "Vote", icon: ArticleIcon, link: "/dashboard" },
+  {
+    id: 2,
+    label: "Add Voters/Candidate",
+    icon: PersonIcon,
+    link: "/dashboard/add",
+  },
+  { id: 3, label: "Admin", icon: UsersIcon, link: "/dashboard/admin" },
+  //   { id: 4, label: "Manage Tutorials", icon: VideosIcon, link: "/tutorials" },
 ];
 
 const Sidebar = () => {
-  const [toggleCollapse, setToggleCollapse] = useState(false);
+  const [toggleCollapse, setToggleCollapse] = useState(true);
   const [isCollapsible, setIsCollapsible] = useState(false);
 
   const router = useRouter();
@@ -31,7 +48,7 @@ const Sidebar = () => {
   );
 
   const wrapperClasses = classNames(
-    "h-screen px-4 pt-8 pb-4 bg-blue-primary flex justify-between flex-col",
+    "h-screen px-4 pt-8 pb-4 bg-white shadow-ld border-r-2  flex justify-between flex-col",
     {
       ["w-80"]: !toggleCollapse,
       ["w-20"]: toggleCollapse,
@@ -39,7 +56,7 @@ const Sidebar = () => {
   );
 
   const collapseIconClasses = classNames(
-    "p-4 rounded bg-light-lighter absolute right-0",
+    "p-4 rounded bg-off-white absolute right-0",
     {
       "rotate-180": toggleCollapse,
     }
@@ -47,9 +64,9 @@ const Sidebar = () => {
 
   const getNavItemClasses = (menu: any) => {
     return classNames(
-      "flex items-center cursor-pointer hover:bg-light-lighter rounded w-full overflow-hidden whitespace-nowrap",
+      "flex items-center cursor-pointer hover:bg-grey-light rounded w-full overflow-hidden whitespace-nowrap",
       {
-        ["bg-light-lighter"]: activeMenu?.id === menu.id,
+        ["bg-blue-secondary text-white font-bold"]: activeMenu?.id === menu.id,
       }
     );
   };
@@ -67,7 +84,10 @@ const Sidebar = () => {
       className={wrapperClasses}
       onMouseEnter={onMouseOver}
       onMouseLeave={onMouseOver}
-      style={{ transition: "width 300ms cubic-bezier(0.2, 0, 0, 1) 0s" }}
+      style={{
+        transition: "width 300ms cubic-bezier(0.2, 0, 0, 1) 0s",
+        boxShadow: "rgb(0 0 0 / 30%) 0px 0px 10px",
+      }}
     >
       <div className="flex flex-col">
         <div className="flex items-center justify-between relative">
@@ -81,24 +101,28 @@ const Sidebar = () => {
               Vote-verse
             </span>
           </div>
-          {isCollapsible && (
-            <button
-              className={collapseIconClasses}
-              onClick={handleSidebarToggle}
-            >
-              {/* <CollapsIcon /> */}
-            </button>
-          )}
+          {/* {isCollapsible && ( */}
+          <button className={collapseIconClasses} onClick={handleSidebarToggle}>
+            <CollapsIcon />
+          </button>
+          {/* )} */}
         </div>
 
         <div className="flex flex-col items-start mt-24">
-          {menuItems.map(({ ...menu }) => {
+          {menuItems.map(({ icon: Icon, ...menu }) => {
             const classes = getNavItemClasses(menu);
             return (
-              <div className={classes}>
+              <div key={menu?.id} className={classes}>
                 <Link href={menu.link}>
-                  <span className="flex py-4 px-3 items-center w-full h-full">
-                    <div style={{ width: "2.5rem" }}>{/* <Icon /> */}</div>
+                  <div className="flex py-4 px-3 items-center w-full h-full md:gap-4">
+                    <div>
+                      {" "}
+                      <Icon
+                        width={26}
+                        height={26}
+                        // fill={`${menu.id === activeMenu?.id ? "#fff" : ""}`}
+                      />{" "}
+                    </div>
                     {!toggleCollapse && (
                       <span
                         className={classNames(
@@ -108,7 +132,7 @@ const Sidebar = () => {
                         {menu.label}
                       </span>
                     )}
-                  </span>
+                  </div>
                 </Link>
               </div>
             );
@@ -117,7 +141,9 @@ const Sidebar = () => {
       </div>
 
       <div className={`${getNavItemClasses({})} px-3 py-4`}>
-        <div style={{ width: "2.5rem" }}>{/* <LogoutIcon /> */}</div>
+        <div style={{ width: "2.5rem" }}>
+          <LogoutIcon />{" "}
+        </div>
         {!toggleCollapse && (
           <span className={classNames("text-md font-medium text-text-light")}>
             Logout
