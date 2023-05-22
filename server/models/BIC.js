@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema(
         message: "Please enter a valid email address",
       },
     },
+    role: {
+      type: String,
+      default: "voter",
+    },
 
     matric: {
       type: String,

@@ -9,7 +9,7 @@ import { getOTP } from "../controllers/OTP.js";
 import { VerifyOTP } from "../controllers/OTP.js";
 import CreateAdmin from "../controllers/CreateAdminAccount.js";
 import AdminLogin from "../controllers/loginAdminAccount.js";
-7;
+import { VoterLogin } from "../controllers/loginAdminAccount.js";
 import { findAllCandidates } from "../controllers/findAllCandidates.js";
 const router = express.Router();
 
@@ -21,6 +21,7 @@ router.post("/candidate", CreateNewCandidate);
 router.post("/getotp", getOTP);
 router.post("/registerAdmin", CreateAdmin);
 router.post("/adminLogin", AdminLogin);
+router.post("/voterLogin", VoterLogin);
 router.post("/verifyotp", VerifyOTP);
 router.get("/findAllUsers", findAllUsers);
 router.get("/findAllCandidates", findAllCandidates);

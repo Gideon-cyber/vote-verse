@@ -27,6 +27,7 @@ export const getOTP = async (req, res) => {
           success: true,
           message: " Check your email for Verification link",
           otp: otp,
+          user: Voter,
         });
       } else {
         return res.status(401).send("voter not found");
@@ -42,18 +43,51 @@ export const getOTP = async (req, res) => {
 };
 
 export const VerifyOTP = async (req, res) => {
+  //you know what happens here?
+  //the matric no in the user obj i passed u in getOTP, you pass it back to me in this route
+  //i send otp to the person using the matric number to find them and their mail
+  //then when they come to this route to verify
+  // if they are sucessfull, i update them as accredited
+  //on successful accreditation, i delet the opt
+  //if they are accredited already, i tell them
+
   try {
-    const { otp } = req.body;
-    const foundOTP = await OTP.find({ otp });
-    console.log(foundOTP);
-    if (foundOTP.length != 0) {
-      res.status(201).send({
-        message: "Verification was successful",
-      });
-      const deletedOTP = await OTP.findOneAndDelete({ otp });
-      console.log(deletedOTP);
+    const { matric, otp } = req.body;
+    if (!matric) {
+      res.status(403).send("missing parameter");
     } else {
-      res.status(401).send("otp is invalid or expired, please try again");
+      const foundOTP = await OTP.find({ otp });
+      if (foundOTP.length != 0) {
+        const filter = { matric: matric };
+        const update = {
+          $set: {
+            Accredited: true,
+          },
+        };
+        const options = { new: true };
+        const checkIfUserIsAccredited = await BICS.BIC.findOne(filter);
+        if (checkIfUserIsAccredited.Accredited) {
+          res.status(403).send({
+            message: "you are already accredited",
+            user: checkIfUserIsAccredited,
+          });
+        } else {
+          const AccreditedUser = await BICS.BIC.findOneAndUpdate(
+            filter,
+            update,
+            options
+          );
+          const deletedOTP = await OTP.findOneAndDelete({ otp });
+          console.log(deletedOTP);
+          res.status(201).send({
+            message:
+              "Verification was successful, you are now being accredited",
+            accreditedUser: AccreditedUser,
+          });
+        }
+      } else {
+        res.status(401).send("otp is invalid or expired, please try again");
+      }
     }
   } catch (err) {
     console.log(err);
