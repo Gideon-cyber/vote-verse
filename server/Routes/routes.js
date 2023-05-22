@@ -11,6 +11,7 @@ import CreateAdmin from "../controllers/CreateAdminAccount.js";
 import AdminLogin from "../controllers/loginAdminAccount.js";
 import { VoterLogin } from "../controllers/loginAdminAccount.js";
 import { findAllCandidates } from "../controllers/findAllCandidates.js";
+import { FindAdminRegisteredVoters } from "../controllers/newUser.js";
 const router = express.Router();
 
 router.post("/verifyUser", VerifyUser); //this is an additional route to find a user by matric only
@@ -23,6 +24,7 @@ router.post("/registerAdmin", CreateAdmin);
 router.post("/adminLogin", AdminLogin);
 router.post("/voterLogin", VoterLogin);
 router.post("/verifyotp", VerifyOTP);
+router.post("/findadminvoters", FindAdminRegisteredVoters);
 router.get("/findAllUsers", findAllUsers);
 router.get("/findAllCandidates", findAllCandidates);
 
