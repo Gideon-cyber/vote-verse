@@ -23,9 +23,7 @@ const Button: React.FC<ButtonProps> = ({
         disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
       }`}
       type={type}
-      onClick={() => {
-        if (!disabled) OnClick;
-      }}
+      onClick={OnClick}
     >
       {loading ? (
         <div>

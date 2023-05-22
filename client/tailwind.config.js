@@ -23,6 +23,7 @@ module.exports = {
         "blue-primary": "#3568FF",
         "black-secondary": "#323A46",
         "off-white": "#CBD1D8",
+        "blue-secondary": "#59B5FF",
       },
     },
   },
