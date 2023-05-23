@@ -1,10 +1,15 @@
 import BICS from "../models/BIC.js";
 import { Admin } from "../models/admin.js";
-
+import { BICSTUDENTS } from "../SampleData/sampledata.js";
 const CreateVoter = async (req, res) => {
   try {
+    // const load = BICSTUDENTS.map(
+    //   async ({ firstName, lastName, email, matric, admin }) => {
+    // return { firstName, lastName, email, matric, admin };
+
     const BIC = BICS.BIC;
     const { firstName, lastName, email, matric, admin } = req.body;
+    // console.log(req.body);
     const newVoter = await new BIC({
       firstName,
       lastName,
@@ -37,7 +42,7 @@ const CreateVoter = async (req, res) => {
           upate,
           option
         );
-
+        // console.log(adminThatCreatedThisVoter);
         if (createdVoter) {
           res.status(200).send({
             createdVoter: createdVoter,
@@ -48,6 +53,8 @@ const CreateVoter = async (req, res) => {
         }
       }
     }
+    //   }
+    // );
   } catch (err) {
     console.error(err);
   }

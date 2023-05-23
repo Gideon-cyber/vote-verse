@@ -7,7 +7,7 @@ const AdminLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
-      res.status(401).send("Wrong email/password");
+      res.status(401).send({ message: "Wrong email/password" });
     } else {
       const FindThisAdmin = await Admin.findOne({
         email: email,
@@ -32,7 +32,7 @@ const AdminLogin = async (req, res) => {
           admin: FindThisAdmin,
         });
       } else {
-        res.status(401).send("Admin not found");
+        res.status(401).send({ message: "Admin not found" });
       }
     }
   } catch (err) {
