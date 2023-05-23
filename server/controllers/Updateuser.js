@@ -41,10 +41,12 @@ export const UpdateThisUser = async (req, res) => {
       };
       const options = { new: true };
       const updatedUser = await BIC.findOneAndUpdate(filter, update, options);
-      res.send({ message: "You have successfully voted" });
       console.log(updatedUser);
       if (updatedUser) {
-        res.status(200).send(updatedUser);
+        res
+          .status(200)
+          .send({ message: "You have successfully voted", voter: updatedUser });
+        // res.status(200).send(updatedUser);
       } else {
         res.status(404).send({ message: "No Such User Found" });
       }

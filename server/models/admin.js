@@ -55,7 +55,12 @@ const AdminSchema = new mongoose.Schema(
       enum: ["superadmin", "admin"],
       required: true,
     },
-    registeredVoters: [],
+    registeredVoters: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "BICS.BIC"
+      }
+    ],
     lastLogIn: {
       type: Date,
     },

@@ -48,7 +48,7 @@ export const VoterLogin = async (req, res) => {
   const { matric, email } = req.body;
   try {
     if (!matric) {
-      res.status(401).send({message:"Wrong email/password"});
+      res.status(401).send({ message: "Wrong email/password" });
     } else {
       const FindThisVoter = await BIC.findOne({
         matric: matric,
@@ -59,9 +59,9 @@ export const VoterLogin = async (req, res) => {
       console.log(email);
 
       if (FindThisVoter) {
-        if (FindThisVoter.Accredited === null) {
+        if (FindThisVoter.Accredited === null && FindThisVoter.Voted === true) {
           res.status(403).send({
-            message: "Sorry, you are not Accreditd to vote",
+            message: "Sorry, you are not Accreditd to vote or you have voted",
           });
         } else {
           const min = 1000;
@@ -82,7 +82,7 @@ export const VoterLogin = async (req, res) => {
           });
         }
       } else {
-        res.status(401).send({message:"Voter not found"});
+        res.status(401).send({ message: "Voter not found" });
       }
     }
   } catch (err) {
