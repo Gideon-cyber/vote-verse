@@ -55,19 +55,44 @@ const CreateVoter = async (req, res) => {
 
 export default CreateVoter;
 
+// export const FindAdminRegisteredVoters = async (req, res) => {
+//   const { admin } = req.body;
+//   try {
+//     const findAdmin = await Admin.findOne({ matric: admin });
+//     console.log(findAdmin);
+//     if (findAdmin) {
+//       res.status(200).send(findAdmin.registeredVoters);
+//     } else {
+//       res.status(404).send({ message: "admin not found" });
+//     }
+//   } catch (err) {
+//     res.status(404).send({
+//       message: err.message,
+//     });
+//   }
+// };
+
 export const FindAdminRegisteredVoters = async (req, res) => {
-  const { admin } = req.body;
   try {
+    //find this user in question
+    const { admin } = req.body;
+    //const user = await User.find({ email });
     const findAdmin = await Admin.findOne({ matric: admin });
     console.log(findAdmin);
+
     if (findAdmin) {
-      res.status(200).send(findAdmin.registeredVoters);
-    } else {
-      res.status(404).send({ message: "admin not found" });
+      const AdminregVoters = findAdmin.registeredVoters;
+      console.log(AdminregVoters);
+      const votersArray = await Promise.all(
+        AdminregVoters.map((_id) => BICS.BIC.find(_id))
+      );
+
+      const foundVoters = votersArray.map((el) => el[0]);
+
+      console.log(foundVoters);
+      res.status(200).json(foundVoters);
     }
   } catch (err) {
-    res.status(404).send({
-      message: err.message,
-    });
+    res.status(404).json({ message: err.message });
   }
 };
