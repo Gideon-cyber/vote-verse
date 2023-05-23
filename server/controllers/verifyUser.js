@@ -10,7 +10,7 @@ export const VerifyUser = async (req, res) => {
       console.log(FindUser);
       res.status(200).send(FindUser);
     } else {
-      res.status(404).send("No Such User Found");
+      res.status(404).send({ message: "No Such User Found" });
     }
   } catch (err) {
     console.error(err);

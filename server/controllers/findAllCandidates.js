@@ -1,16 +1,5 @@
 import Runner from "../models/Candidate.js";
 
-const Groups = {
-  president: [],
-  vicePresident: [],
-  AGS: [],
-  sport: [],
-  gensec: [],
-  social: [],
-  pro: [],
-  finsec: [],
-  treasurer: [],
-};
 
 export const findAllCandidates = async (req, res) => {
   const AllUser = await Runner.find();

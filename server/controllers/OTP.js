@@ -7,7 +7,7 @@ export const getOTP = async (req, res) => {
     const { matric } = req.body;
     const BIC = BICS.BIC;
     if (!matric) {
-      res.status(400).send("please Provide your matric");
+      res.status(400).send({message:"please Provide your matric"});
     } else {
       const Voter = await BIC.find({ matric });
       // console.log(Voter)
@@ -30,7 +30,7 @@ export const getOTP = async (req, res) => {
           user: Voter,
         });
       } else {
-        return res.status(401).send("voter not found");
+        return res.status(401).send({message:"voter not found"});
       }
     }
   } catch (err) {
@@ -54,7 +54,7 @@ export const VerifyOTP = async (req, res) => {
   try {
     const { matric, otp } = req.body;
     if (!matric) {
-      res.status(403).send("missing parameter");
+      res.status(403).send({message:"missing parameter"});
     } else {
       const foundOTP = await OTP.find({ otp });
       if (foundOTP.length != 0) {
@@ -86,7 +86,7 @@ export const VerifyOTP = async (req, res) => {
           });
         }
       } else {
-        res.status(401).send("otp is invalid or expired, please try again");
+        res.status(401).send({message:"otp is invalid or expired, please try again"});
       }
     }
   } catch (err) {
