@@ -47,14 +47,16 @@ export const VoterLogin = async (req, res) => {
   const BIC = BICS.BIC;
   const { matric, email } = req.body;
   try {
-    if (!email || !matric) {
+    if (!matric) {
       res.status(401).send("Wrong email/password");
     } else {
       const FindThisVoter = await BIC.findOne({
-        email: email,
         matric: matric,
       });
+
+      const email = FindThisVoter.email;
       console.log(FindThisVoter);
+      console.log(email);
 
       if (FindThisVoter) {
         if (FindThisVoter.Accredited === null) {
