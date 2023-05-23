@@ -23,7 +23,7 @@ const CreateNewCandidate = async (req, res) => {
       !office ||
       !description
     ) {
-      res.status(401).send({message:"You must provide all credentials"});
+      res.status(401).send({ message: "You must provide all credentials" });
     } else {
       const newCandidate = await new Runner({
         firstName,
@@ -37,9 +37,12 @@ const CreateNewCandidate = async (req, res) => {
       });
 
       const existingCandidate = await Runner.findOne({ matric });
+      console.log(existingCandidate)
       if (existingCandidate) {
-        res.status(404).send({message:"Candidate already exist"});
+        res.status(404).send({ message: "Candidate already exist" });
       } else {
+        const registeredCandidate = await newCandidate.save();
+        console.log(registeredCandidate);
         res.status(201).send({
           candidate: registeredCandidate,
         });
