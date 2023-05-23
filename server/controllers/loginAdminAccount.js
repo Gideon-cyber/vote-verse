@@ -48,7 +48,7 @@ export const VoterLogin = async (req, res) => {
   const { matric, email } = req.body;
   try {
     if (!matric) {
-      res.status(401).send("Wrong email/password");
+      res.status(401).send({message:"Wrong email/password"});
     } else {
       const FindThisVoter = await BIC.findOne({
         matric: matric,
@@ -82,7 +82,7 @@ export const VoterLogin = async (req, res) => {
           });
         }
       } else {
-        res.status(401).send("Voter not found");
+        res.status(401).send({message:"Voter not found"});
       }
     }
   } catch (err) {

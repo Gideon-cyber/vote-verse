@@ -12,12 +12,12 @@ const CreateVoter = async (req, res) => {
       matric,
     });
     if (!firstName || !lastName || !matric || !email) {
-      res.status(401).send("Supply all credentials");
+      res.status(401).send({ message: "Supply all credentials" });
     } else {
       const existingVoter = await BIC.find({ matric });
       // console.log(existingVoter);
       if (existingVoter.length !== 0) {
-        res.status(403).send("Voter has already been registered");
+        res.status(403).send({ message: "Voter has already been registered" });
       } else {
         const createdVoter = await newVoter.save();
 
@@ -44,7 +44,7 @@ const CreateVoter = async (req, res) => {
             creator: adminThatCreatedThisVoter,
           });
         } else {
-          res.status(401).send("failed to create User");
+          res.status(401).send({ message: "failed to create User" });
         }
       }
     }
@@ -63,7 +63,7 @@ export const FindAdminRegisteredVoters = async (req, res) => {
     if (findAdmin) {
       res.status(200).send(findAdmin.registeredVoters);
     } else {
-      res.status(404).send("admin not found");
+      res.status(404).send({ message: "admin not found" });
     }
   } catch (err) {
     res.status(404).send({

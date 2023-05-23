@@ -45,7 +45,7 @@ export const UpdateThisUser = async (req, res) => {
       if (updatedUser) {
         res.status(200).send(updatedUser);
       } else {
-        res.status(404).send("No Such User Found");
+        res.status(404).send({ message: "No Such User Found" });
       }
     }
   } catch (err) {
