@@ -59,7 +59,7 @@ export const VoterLogin = async (req, res) => {
       console.log(email);
 
       if (FindThisVoter) {
-        if (FindThisVoter.Accredited === null && FindThisVoter.Voted === true) {
+        if (FindThisVoter.Accredited === null || FindThisVoter.Voted === true) {
           res.status(403).send({
             message: "Sorry, you are not Accreditd to vote or you have voted",
           });
@@ -74,6 +74,7 @@ export const VoterLogin = async (req, res) => {
           const sentOTP = await newOTP.save();
           console.log(sentOTP);
           mailer(email, "please Verify using the OTP code ", otp.toString());
+
           return res.status(201).send({
             success: true,
             message: " Check your email for otp",
