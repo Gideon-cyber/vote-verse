@@ -3,10 +3,8 @@ import { Admin } from "../models/admin.js";
 import { BICSTUDENTS } from "../SampleData/sampledata.js";
 const CreateVoter = async (req, res) => {
   try {
-    // const load = BICSTUDENTS.map(
-    //   async ({ firstName, lastName, email, matric, admin }) => {
-    // return { firstName, lastName, email, matric, admin };
-
+    //const load = BICSTUDENTS.map(
+    // async ({ firstName, lastName, email, matric, admin }) => {
     const BIC = BICS.BIC;
     const { firstName, lastName, email, matric, admin } = req.body;
     // console.log(req.body);
@@ -43,11 +41,13 @@ const CreateVoter = async (req, res) => {
           option
         );
         // console.log(adminThatCreatedThisVoter);
-        if (createdVoter) {
+        if (adminThatCreatedThisVoter) {
           res.status(200).send({
+            message: "Successfully created",
             createdVoter: createdVoter,
             creator: adminThatCreatedThisVoter,
           });
+          console.log("Success");
         } else {
           res.status(401).send({ message: "failed to create User" });
         }
@@ -89,15 +89,15 @@ export const FindAdminRegisteredVoters = async (req, res) => {
 
     if (findAdmin) {
       const AdminregVoters = findAdmin.registeredVoters;
-      console.log(AdminregVoters);
+      // console.log(AdminregVoters);
       const votersArray = await Promise.all(
         AdminregVoters.map((_id) => BICS.BIC.find(_id))
       );
 
       const foundVoters = votersArray.map((el) => el[0]);
 
-      console.log(foundVoters);
-      res.status(200).json(foundVoters);
+      // console.log(foundVoters);
+      res.status(200).json({ voters: foundVoters, number: foundVoters.length });
     }
   } catch (err) {
     res.status(404).json({ message: err.message });
