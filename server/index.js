@@ -10,6 +10,34 @@ import BICS from "./models/BIC.js";
 //define the server
 const app = express();
 
+const allowedOrigins = ["https://vote-verse.vercel.app"];
+
+// Do you want to skip the checking of the origin and grant authorization?
+const skipTheCheckingOfOrigin = true;
+
+MIDDLEWARES;
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps or curl requests)
+      // or allow all origines (skipTheCheckingOfOrigin === true)
+      if (!origin || skipTheCheckingOfOrigin === true)
+        return callback(null, true);
+
+      // -1 means that the user's origin is not in the array allowedOrigins
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          "The CORS policy for this site does not " +
+          "allow access from the specified Origin.";
+
+        return callback(new Error(msg), false);
+      }
+      // origin is in the array allowedOrigins so authorization is granted
+      return callback(null, true);
+    },
+  })
+);
+
 //use modules
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,11 +61,10 @@ mongoose
   .then(
     app.listen(PORT, async (req, res) => {
       console.log(`Server is running on port ${PORT}`);
-       const BIC = BICS.BIC;
+      const BIC = BICS.BIC;
       // const loadDB = await BIC.insertMany(BICSTUDENTS);
       // console.log(loadDB);
       // const deldB = await BIC.deleteMany();
-    
     })
   )
   .then(() => console.log("DB connected"))
