@@ -6,7 +6,7 @@ import AuthContainer from "@/components/login/AuthContainer";
 import TextContainer from "@/components/login/TextContainer";
 import { useFormik } from "formik";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -16,12 +16,18 @@ import {
   useSearchParams,
 } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addUser } from "@/redux/userSlice";
 import axiosInstance from "@/utils/axiosInstance";
+import { isEmpty } from "@/utils";
 
 export default function Login() {
   const router = useRouter();
+  const { user } = useAppSelector((state) => state.user);
+  useEffect(() => {
+    isEmpty(user) === false && router.push("/dashboard");
+  }, []);
+
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -44,7 +50,6 @@ export default function Login() {
       });
 
       // Process the response data
-      console.log(response.data);
 
       if (response?.data?.success === true) {
         {
@@ -75,7 +80,6 @@ export default function Login() {
       });
 
       // Process the response data
-      console.log(response.data);
 
       if (response?.data?.success === true) {
         toast.success(response?.data?.message);
@@ -109,7 +113,6 @@ export default function Login() {
     },
     onSubmit: (values) => {
       setLoading(true);
-      console.log(values);
       login(values.email, values.password);
       setSubmitting(false);
       setLoading(false);
@@ -194,7 +197,6 @@ export default function Login() {
                   label="Login"
                   type="submit"
                   OnClick={() => {
-                    console.log(voterData);
                     voterLogin(voterData.matric);
                   }}
                   loading={loading}

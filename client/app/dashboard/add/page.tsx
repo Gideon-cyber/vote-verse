@@ -10,21 +10,24 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import axiosInstance from "@/utils/axiosInstance";
+import { isEmpty } from "@/utils";
 
 export default function Admin() {
   const router = useRouter();
   const { user } = useAppSelector((state) => state.user);
+  useEffect(() => {
+    isEmpty(user) === true && router.push("/login");
+  }, [user]);
+
   const addCandidate = async () => {
     try {
       const response = await axiosInstance.post(`/candidate`, {
         ...values,
         level: parseInt(values.level),
       });
-
-      console.log(response);
 
       // Process the response data
 
@@ -58,7 +61,6 @@ export default function Admin() {
         admin: user?.matric,
       });
 
-      console.log(response);
       // Process the response data
 
       if (response.status === 200) {
@@ -77,9 +79,10 @@ export default function Admin() {
 
       // Return any relevant data from the response
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       // Handle any errors that occur during the API call
       console.error(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -106,7 +109,6 @@ export default function Admin() {
         description: "",
       },
       onSubmit: (values, { resetForm }) => {
-        console.log(values);
         addCandidate();
         resetForm({
           values: {
@@ -284,8 +286,6 @@ export default function Admin() {
             label="Add Voter"
             type="button"
             OnClick={() => {
-              console.log("clicked");
-              console.log(validationData);
               addVoter();
             }}
           />

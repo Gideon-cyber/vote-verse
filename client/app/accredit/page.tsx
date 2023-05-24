@@ -29,7 +29,6 @@ export default function Login() {
         ...data,
       });
 
-      console.log(response);
       // Process the response data
 
       if (response.status === 201) {
@@ -41,9 +40,10 @@ export default function Login() {
 
       // Return any relevant data from the response
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       // Handle any errors that occur during the API call
       console.error(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -52,7 +52,6 @@ export default function Login() {
       matric: values.matric,
       otp,
     };
-    console.log(data);
     try {
       const response = await axiosInstance.post(`/verifyotp`, {
         ...data,
@@ -64,7 +63,6 @@ export default function Login() {
         toast.success(response.data.message);
         // router.push("/dashboard");
       } else if (response.status === 403) {
-        console.log(response.data.message);
         toast.error(response.data.message);
       }
 

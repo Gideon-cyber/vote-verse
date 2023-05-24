@@ -11,10 +11,15 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axiosInstance";
+import { isEmpty } from "@/utils";
 
 const Admin = () => {
+  const router = useRouter();
   const { user } = useAppSelector((state) => state.user);
-  console.log(user);
+
+  useEffect(() => {
+    isEmpty(user) === true && router.push("/login");
+  }, [user]);
 
   const [voters, setVoters] = useState<any>([]);
   const nav = [" View all Voters"];
@@ -25,7 +30,6 @@ const Admin = () => {
         admin: user?.matric?.toString(),
       });
 
-      console.log(response);
       // Process the response data
 
       if (response.status === 200) {

@@ -11,10 +11,15 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
+import { isEmpty } from "@/utils";
 
 const Dashboard = () => {
   const router = useRouter();
   const { user } = useAppSelector((state) => state.user);
+  useEffect(() => {
+    isEmpty(user) === true && router.push("/login");
+  }, [user]);
+
   const [loading, setLoading] = useState(false);
   const [candidateData, setCandidateData] = useState([] as any);
   const [votingData, setVotingData] = useState({} as any);
@@ -22,15 +27,12 @@ const Dashboard = () => {
   const getAllCandidate = async () => {
     try {
       const response = await axiosInstance.get(`/findAllCandidates`);
-      // Process the response data
-      console.log(response);
 
       if (response.status === 200) {
         //   toast.success(response.data.message);
         const newData: { role: string; data: any }[] = sortByRole(
           response.data
         );
-        console.log(newData);
         setCandidateData(newData);
       } else {
         toast.error(response.data.message);
@@ -38,9 +40,10 @@ const Dashboard = () => {
 
       // Return any relevant data from the response
       //   return response;
-    } catch (error) {
+    } catch (error: any) {
       // Handle any errors that occur during the API call
       console.error(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -62,7 +65,6 @@ const Dashboard = () => {
         ...newData,
       });
       // Process the response data
-      console.log(response);
 
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -123,10 +125,7 @@ const Dashboard = () => {
                   >
                     <div className="w-[100px] h-[100px] rounded-full bg-slate-400"></div>
                     <div className="flex items-center flex-col">
-                      <h3
-                        className="font-semibold"
-                        onClick={() => console.log(votingData)}
-                      >
+                      <h3 className="font-semibold">
                         {item.firstName} {item.lastName}
                       </h3>
                     </div>
