@@ -12,19 +12,17 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default function Admin() {
   const router = useRouter();
   const { user } = useAppSelector((state) => state.user);
   const addCandidate = async () => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/candidate`,
-        {
-          ...values,
-          level: parseInt(values.level),
-        }
-      );
+      const response = await axiosInstance.post(`/candidate`, {
+        ...values,
+        level: parseInt(values.level),
+      });
 
       console.log(response);
 
@@ -55,13 +53,10 @@ export default function Admin() {
 
   const addVoter = async () => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/register`,
-        {
-          ...validationData,
-          admin: user?.matric,
-        }
-      );
+      const response = await axiosInstance.post(`/register`, {
+        ...validationData,
+        admin: user?.matric,
+      });
 
       console.log(response);
       // Process the response data

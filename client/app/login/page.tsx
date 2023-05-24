@@ -18,6 +18,7 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch } from "@/redux/hooks";
 import { addUser } from "@/redux/userSlice";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default function Login() {
   const router = useRouter();
@@ -37,13 +38,10 @@ export default function Login() {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/adminLogin`,
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axiosInstance.post(`/adminLogin`, {
+        email,
+        password,
+      });
 
       // Process the response data
       console.log(response.data);
@@ -72,12 +70,9 @@ export default function Login() {
 
   const voterLogin = async (matric: string) => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/voterLogin`,
-        {
-          matric,
-        }
-      );
+      const response = await axiosInstance.post(`/voterLogin`, {
+        matric,
+      });
 
       // Process the response data
       console.log(response.data);

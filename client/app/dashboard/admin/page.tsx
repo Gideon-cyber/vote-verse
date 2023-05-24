@@ -10,6 +10,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
+import axiosInstance from "@/utils/axiosInstance";
 
 const Admin = () => {
   const { user } = useAppSelector((state) => state.user);
@@ -20,12 +21,9 @@ const Admin = () => {
   const [selected, setSelected] = useState(0);
   const AllVoter = async () => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/findadminvoters`,
-        {
-          admin: user?.matric?.toString(),
-        }
-      );
+      const response = await axiosInstance.post(`/findadminvoters`, {
+        admin: user?.matric?.toString(),
+      });
 
       console.log(response);
       // Process the response data

@@ -10,6 +10,7 @@ import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -24,12 +25,9 @@ export default function Login() {
       matric: values.matric,
     };
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/getotp`,
-        {
-          ...data,
-        }
-      );
+      const response = await axiosInstance.post(`/getotp`, {
+        ...data,
+      });
 
       console.log(response);
       // Process the response data
@@ -56,12 +54,9 @@ export default function Login() {
     };
     console.log(data);
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/verifyotp`,
-        {
-          ...data,
-        }
-      );
+      const response = await axiosInstance.post(`/verifyotp`, {
+        ...data,
+      });
 
       // Process the response data
 

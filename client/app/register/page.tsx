@@ -13,6 +13,7 @@ import axios from "axios";
 import { useAppDispatch } from "@/redux/hooks";
 import { addUser } from "@/redux/userSlice";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default function Login() {
   const dispatch = useAppDispatch();
@@ -20,12 +21,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const register = async () => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/registeradmin`,
-        {
-          ...values,
-        }
-      );
+      const response = await axiosInstance.post(`/registeradmin`, {
+        ...values,
+      });
 
       // Process the response data
       console.log(response.data);

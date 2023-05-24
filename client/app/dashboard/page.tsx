@@ -10,6 +10,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/utils/axiosInstance";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -20,9 +21,7 @@ const Dashboard = () => {
 
   const getAllCandidate = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/findAllCandidates`
-      );
+      const response = await axiosInstance.get(`/findAllCandidates`);
       // Process the response data
       console.log(response);
 
@@ -58,13 +57,10 @@ const Dashboard = () => {
       candidate9: votingData?.AGS,
     };
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/updateThisUser`,
-        {
-          matric: user?.matric,
-          ...newData,
-        }
-      );
+      const response = await axiosInstance.post(`/updateThisUser`, {
+        matric: user?.matric,
+        ...newData,
+      });
       // Process the response data
       console.log(response);
 
