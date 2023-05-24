@@ -1,3 +1,5 @@
+"use client";
+
 import Button from "@/components/Button";
 import InputField from "@/components/Input";
 import TextContainer from "@/components/login/TextContainer";
@@ -6,33 +8,46 @@ import "react-toastify/dist/ReactToastify.css";
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
 
-const Admin = async () => {
+const Admin = () => {
+  const { user } = useAppSelector((state) => state.user);
+  console.log(user);
+
+  const [voters, setVoters] = useState<any>([]);
+  const nav = [" View all Voters"];
+  const [selected, setSelected] = useState(0);
   const AllVoter = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/findAllUsers`
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/findadminvoters`,
+        {
+          admin: user?.matric?.toString(),
+        }
       );
 
       console.log(response);
       // Process the response data
 
       if (response.status === 200) {
+        setVoters(response.data.voters);
       } else {
         toast.error(response.data.message);
       }
 
       // Return any relevant data from the response
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       // Handle any errors that occur during the API call
       console.error(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
-  const Voters = await AllVoter();
-  const nav = [" View all Voters"];
-  let selected = 0;
+  useEffect(() => {
+    AllVoter();
+  }, [user]);
 
   return (
     <div className="overflow-y-scroll p-4 md:p-6 h-full w-full text-black flex items-start flex-col gap-3">
@@ -80,6 +95,18 @@ const Admin = async () => {
                 >
                   Matric
                 </th>
+                <th
+                  scope="col"
+                  className="pb-3.5 pl-3 text-left text-sm font-semibold text-gray-900"
+                >
+                  Accredited
+                </th>
+                <th
+                  scope="col"
+                  className="pb-3.5 pl-3 text-left text-sm font-semibold text-gray-900"
+                >
+                  Voted
+                </th>
               </tr>
             </thead>
             {/* {loading ? (
@@ -96,32 +123,42 @@ const Admin = async () => {
                 </tbody>
               ) : ( */}
             <tbody className="divide-y divide-gray-200">
-              {Voters?.length === 0 && (
+              {voters?.length === 0 ? (
                 <tr className="italic text-background-color text-[12px] leading-[12px]">
                   <td className="px-[63px] pt-4 pb-[90px]">No Voters Yet</td>
                 </tr>
+              ) : (
+                voters?.map((voter: any, index: number) => {
+                  return (
+                    <tr key={index}>
+                      <td className="py-4 whitespace-normal pl-4 pr-3 sm:pl-6 md:pl-0 max-w-[308px]">
+                        {voter?.firstName}
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-3">
+                        {voter?.lastName}
+                      </td>
+                      <td className="whitespace-nowrap py-4 px-3 leading-[18px] text-background-color">
+                        {voter?.email}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap py-4 px-3  leading-[20px] font-b-600 `}
+                      >
+                        {voter?.matric}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap py-4 px-3  leading-[20px] font-b-600 `}
+                      >
+                        {voter?.Accredited ? "Yes" : "No"}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap py-4 px-3  leading-[20px] font-b-600 `}
+                      >
+                        {voter?.Voted ? "Yes" : "No"}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
-
-              {Voters?.map((voter: any, index: number) => {
-                return (
-                  <tr key={index}>
-                    <td className="py-4 whitespace-normal pl-4 pr-3 sm:pl-6 md:pl-0 max-w-[308px]">
-                      {voter?.firstName}
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-3">
-                      {voter?.lastName}
-                    </td>
-                    <td className="whitespace-nowrap py-4 px-3 leading-[18px] text-background-color">
-                      {voter?.email}
-                    </td>
-                    <td
-                      className={`whitespace-nowrap py-4 px-3  leading-[20px] font-b-600 `}
-                    >
-                      {voter?.matric}
-                    </td>
-                  </tr>
-                );
-              })}
             </tbody>
             {/* )} */}
           </table>

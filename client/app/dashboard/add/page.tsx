@@ -11,17 +11,23 @@ import { useRouter } from "next/navigation";
 
 import { useFormik } from "formik";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 export default function Admin() {
   const router = useRouter();
+  const { user } = useAppSelector((state) => state.user);
   const addCandidate = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/candidate", {
-        ...values,
-        level: parseInt(values.level),
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/candidate`,
+        {
+          ...values,
+          level: parseInt(values.level),
+        }
+      );
 
       console.log(response);
+
       // Process the response data
 
       if (response.status === 201) {
@@ -40,9 +46,10 @@ export default function Admin() {
 
       // Return any relevant data from the response
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       // Handle any errors that occur during the API call
       console.error(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -52,6 +59,7 @@ export default function Admin() {
         `${process.env.NEXT_PUBLIC_API_URL}/register`,
         {
           ...validationData,
+          admin: user?.matric,
         }
       );
 

@@ -12,29 +12,26 @@ import { ToastContainer, toast } from "react-toastify";
 import {
   useRouter,
   useParams,
-  usePathname,
   useSearchParams,
+  usePathname,
 } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch } from "@/redux/hooks";
-import { addUser } from "@/redux/userSlice";
 
 export default function Login() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  const params = useParams();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  console.log(pathname);
   const id = searchParams.get("id");
+  console.log(id);
+  console.log(params);
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [validationData, setValidationData] = useState({
     otp: "",
   });
-  const [voterData, setVoterData] = useState({
-    matric: "",
-  });
-  const [voter, setVoter] = useState({} as any);
-  const [otp, setOTP] = useState(0);
-
+  const [admin, setAdmin] = useState({} as any);
   const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(
@@ -49,43 +46,8 @@ export default function Login() {
       console.log(response.data);
 
       if (response?.data?.success === true) {
-        {
-          !id
-            ? toast.success("Login successful")
-            : toast.success(response?.data?.message);
-        }
-
-        dispatch(addUser(response?.data?.admin));
-        router.push("/dashboard");
-      } else {
-        toast.error(response.data.message);
-      }
-
-      // Return any relevant data from the response
-      return response.data;
-    } catch (error: any) {
-      // Handle any errors that occur during the API call
-      console.error(error);
-      toast.error(error?.response?.data?.message);
-    }
-  };
-
-  const voterLogin = async (matric: string) => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/voterLogin`,
-        {
-          matric,
-        }
-      );
-
-      // Process the response data
-      console.log(response.data);
-
-      if (response?.data?.success === true) {
         toast.success(response?.data?.message);
-        setVoter(response?.data?.voter);
-        setOTP(response?.data?.otp);
+        setAdmin(response?.data?.admin);
         setShowOTP(true);
       } else {
         toast.error(response.data.message);
@@ -93,10 +55,40 @@ export default function Login() {
 
       // Return any relevant data from the response
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       // Handle any errors that occur during the API call
       console.error(error);
-      toast.error(error?.response?.data?.message);
+    }
+  };
+
+  const verifyOTP = async (otp: string) => {
+    const data = {
+      matric: admin?.matric.toString(),
+      otp,
+    };
+    console.log(data);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/verifyotp`,
+        {
+          ...data,
+        }
+      );
+
+      // Process the response data
+
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        // router.push("/dashboard");
+      } else {
+        toast.error(response.data.message);
+      }
+
+      // Return any relevant data from the response
+      return response.data;
+    } catch (error) {
+      // Handle any errors that occur during the API call
+      console.error(error);
     }
   };
 
@@ -127,21 +119,8 @@ export default function Login() {
     setValidationData(() => ({ ...validationData, [name]: value }));
   };
 
-  const handleVoterLogin = (e: any) => {
-    const { name, value } = e.target;
-    setVoterData(() => ({ ...voterData, [name]: value }));
-  };
-
-  const verifyOTP = async (otpParam: string) => {
-    const newOtp = parseInt(otpParam);
-
-    if (newOtp === otp) {
-      toast.success("OTP verified successfully");
-      setTimeout(() => {
-        dispatch(addUser(voter));
-        router.push("/dashboard");
-      }, 2000);
-    }
+  const handleVerify = async () => {
+    console.log(validationData);
   };
   return (
     <AuthContainer>
@@ -163,7 +142,6 @@ export default function Login() {
                 placeholder="Enter OTP"
                 handleBlur={handleValidation}
                 handleChange={handleValidation}
-                value={validationData.otp || ""}
                 type="text"
               />
 
@@ -184,69 +162,44 @@ export default function Login() {
               </h1>
               <p className="text-grey-primary">We are happy to see you back!</p>
             </div>
-            {id ? (
-              <div className="flex items-start w-full gap-5 flex-col">
-                <InputField
-                  label="Matric No"
-                  name="matric"
-                  placeholder="eg. 180419"
-                  handleBlur={handleVoterLogin}
-                  handleChange={handleVoterLogin}
-                  type="text"
-                />
+            <form
+              className="flex items-start w-full gap-5 flex-col"
+              onSubmit={handleSubmit}
+            >
+              <InputField
+                label="Email"
+                name="email"
+                placeholder="voteverse@gmail.com"
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                value={values["email"]}
+                type="text"
+              />
 
-                <Button
-                  label="Login"
-                  type="submit"
-                  OnClick={() => {
-                    console.log(voterData);
-                    voterLogin(voterData.matric);
-                  }}
-                  loading={loading}
-                />
-              </div>
-            ) : (
-              <form
-                className="flex items-start w-full gap-5 flex-col"
-                onSubmit={handleSubmit}
-              >
-                <InputField
-                  label="Email"
-                  name="email"
-                  placeholder="voteverse@gmail.com"
-                  handleBlur={handleBlur}
-                  handleChange={handleChange}
-                  value={values["email"]}
-                  type="text"
-                />
+              <InputField
+                label="Password"
+                name="password"
+                placeholder="*********"
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                value={values["password"]}
+                type="password"
+              />
 
-                <InputField
-                  label="Password"
-                  name="password"
-                  placeholder="*********"
-                  handleBlur={handleBlur}
-                  handleChange={handleChange}
-                  value={values["password"]}
-                  type="password"
-                />
-
-                <Button
-                  label="Login"
-                  type="submit"
-                  OnClick={() => {}}
-                  disabled={isSubmitting}
-                  loading={loading}
-                />
-              </form>
-            )}
-            {!id && (
-              <div className="text-[14px] leading-[150%] font-medium text-grey-primary tracking-[0.01em]">
-                Don't have an account?{" "}
-                <Link href="/register" className="text-blue-primary">
-                  Sign up here
-                </Link>
-              </div>
-            )}
+              <Button
+                label="Login"
+                type="submit"
+                OnClick={() => {}}
+                disabled={isSubmitting}
+                loading={loading}
+              />
+            </form>
+            <div className="text-[14px] leading-[150%] font-medium text-grey-primary tracking-[0.01em]">
+              Don't have an account?{" "}
+              <Link href="/register" className="text-blue-primary">
+                Sign up here
+              </Link>
+            </div>
           </div>
         )}
         <ToastContainer autoClose={2000} />

@@ -3,7 +3,7 @@
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   ArticleIcon,
   CollapsIcon,
@@ -14,6 +14,8 @@ import {
   VideosIcon,
   PersonIcon,
 } from "../icons";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout } from "@/redux/userSlice";
 
 interface menuItemType {
   id: number;
@@ -22,20 +24,40 @@ interface menuItemType {
   icon: any;
 }
 
-const menuItems: menuItemType[] = [
-  //   { id: 1, label: "Home", icon: HomeIcon, link: "/" },
-  { id: 1, label: "Vote", icon: ArticleIcon, link: "/dashboard" },
-  {
-    id: 2,
-    label: "Add Voters/Candidate",
-    icon: PersonIcon,
-    link: "/dashboard/add",
-  },
-  { id: 3, label: "Admin", icon: UsersIcon, link: "/dashboard/admin" },
-  //   { id: 4, label: "Manage Tutorials", icon: VideosIcon, link: "/tutorials" },
-];
-
 const Sidebar = () => {
+  const { user } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  let menuItems: menuItemType[] = [
+    //   { id: 1, label: "Home", icon: HomeIcon, link: "/" },
+    {
+      id: 1,
+      label: `${user?.role === "voter" ? "Vote" : "Candidates"}`,
+      icon: ArticleIcon,
+      link: "/dashboard",
+    },
+
+    //   { id: 4, label: "Manage Tutorials", icon: VideosIcon, link: "/tutorials" },
+  ];
+
+  //   useEffect(() => {
+  if (user?.role === "admin") {
+    menuItems = [
+      ...menuItems,
+      {
+        id: 2,
+        label: "Add Voters/Candidate",
+        icon: PersonIcon,
+        link: "/dashboard/add",
+      },
+      {
+        id: 3,
+        label: "Admin",
+        icon: UsersIcon,
+        link: "/dashboard/admin",
+      },
+    ];
+  }
+  //   }, []);
   const [toggleCollapse, setToggleCollapse] = useState(true);
   const [isCollapsible, setIsCollapsible] = useState(false);
 
@@ -77,6 +99,16 @@ const Sidebar = () => {
 
   const handleSidebarToggle = () => {
     setToggleCollapse(!toggleCollapse);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    if (user?.role === "voter") {
+      router.push("/login?id=bic");
+    } else {
+      router.push("/login");
+    }
+    // dispatch(logout());
   };
 
   return (
@@ -140,7 +172,10 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <div className={`${getNavItemClasses({})} px-3 py-4`}>
+      <div
+        className={`${getNavItemClasses({})} px-3 py-4`}
+        onClick={() => handleLogout()}
+      >
         <div style={{ width: "2.5rem" }}>
           <LogoutIcon />{" "}
         </div>

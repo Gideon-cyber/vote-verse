@@ -7,9 +7,46 @@ import TextContainer from "@/components/login/TextContainer";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { useAppDispatch } from "@/redux/hooks";
+import { addUser } from "@/redux/userSlice";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const register = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/registeradmin`,
+        {
+          ...values,
+        }
+      );
+
+      // Process the response data
+      console.log(response.data);
+
+      if (response?.data?.success === true) {
+        toast.success(response?.data?.message);
+        dispatch(addUser(response?.data?.identity));
+
+        router.push("/dashboard");
+      } else {
+        toast.error(response.data.message);
+      }
+
+      // Return any relevant data from the response
+      return response.data;
+    } catch (error: any) {
+      // Handle any errors that occur during the API call
+      console.error(error);
+      toast.error(error?.response?.data?.message);
+    }
+  };
   const {
     values,
     handleChange,
@@ -19,22 +56,32 @@ export default function Login() {
     setSubmitting,
   } = useFormik({
     initialValues: {
+      firstName: "",
+      lastName: "",
+      Department: "",
+      matric: "",
       email: "",
       password: "",
     },
     onSubmit: (values) => {
       setLoading(true);
       console.log(values);
-      setTimeout(() => {
-        setLoading(false);
-      }, 3000);
+      register();
+      setLoading(false);
+      values.firstName = "";
+      values.lastName = "";
+      values.email = "";
+      values.matric = "";
+      values.Department = "";
+      values.password = "";
+
       //   setSubmitting(false);
     },
   });
   return (
     <AuthContainer>
       <TextContainer>
-        <div className="w-full flex items-center lg:items-start flex-col gap-6">
+        <div className="w-full flex items-center lg:items-start flex-col gap-6 h-full overflow-y-hidden">
           <div className="flex items-center lg:items-start gap-2 flex-col">
             <h1 className="text-black text-[30px] lg:text-[48px] leading-[150%] font-bold text-center lg:text-left">
               Hey, We are glad you chose Vote-Verse!
@@ -42,9 +89,27 @@ export default function Login() {
             <p className="text-grey-primary">Fill this form to get started</p>
           </div>
           <form
-            className="flex items-start w-full gap-5 flex-col"
+            className="flex items-start w-full gap-5 flex-col overflow-y-scroll h-[300px]"
             onSubmit={handleSubmit}
           >
+            <InputField
+              label="First Name"
+              name="firstName"
+              placeholder="Angel"
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              value={values["firstName"]}
+              type="text"
+            />
+            <InputField
+              label="Last Name"
+              name="lastName"
+              placeholder="Gabriel"
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              value={values["lastName"]}
+              type="text"
+            />
             <InputField
               label="Email"
               name="email"
@@ -52,6 +117,25 @@ export default function Login() {
               handleBlur={handleBlur}
               handleChange={handleChange}
               value={values["email"]}
+              type="text"
+            />
+            <InputField
+              label="Department"
+              name="Department"
+              placeholder="e.g bic"
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              value={values["Department"]}
+              type="text"
+            />
+
+            <InputField
+              label="Matric No"
+              name="matric"
+              placeholder="e.g 180419"
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              value={values["matric"]}
               type="text"
             />
 
@@ -80,6 +164,7 @@ export default function Login() {
             </Link>
           </div>
         </div>
+        <ToastContainer autoClose={2000} />
       </TextContainer>
     </AuthContainer>
   );

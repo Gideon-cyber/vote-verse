@@ -7,10 +7,87 @@ import TextContainer from "@/components/login/TextContainer";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
+
+  const [validationData, setValidationData] = useState({
+    otp: "",
+  });
+
+  const getOTP = async () => {
+    const data = {
+      matric: values.matric,
+    };
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/getotp`,
+        {
+          ...data,
+        }
+      );
+
+      console.log(response);
+      // Process the response data
+
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        // router.push("/dashboard");
+      } else {
+        toast.error(response.data.message);
+      }
+
+      // Return any relevant data from the response
+      return response.data;
+    } catch (error) {
+      // Handle any errors that occur during the API call
+      console.error(error);
+    }
+  };
+
+  const verifyOTP = async (otp: string) => {
+    const data = {
+      matric: values.matric,
+      otp,
+    };
+    console.log(data);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/verifyotp`,
+        {
+          ...data,
+        }
+      );
+
+      // Process the response data
+
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        // router.push("/dashboard");
+      } else if (response.status === 403) {
+        console.log(response.data.message);
+        toast.error(response.data.message);
+      }
+
+      // Return any relevant data from the response
+      return response.data;
+    } catch (error: any) {
+      // Handle any errors that occur during the API call
+      console.error(error);
+      toast.error(error?.response?.data?.message);
+      setShowOTP(false);
+    }
+  };
+
+  const handleValidation = (e: any) => {
+    const { name, value } = e.target;
+    setValidationData(() => ({ ...validationData, [name]: value }));
+  };
+
   const {
     values,
     handleChange,
@@ -25,7 +102,8 @@ export default function Login() {
     onSubmit: (values) => {
       setSubmitting(true);
       setLoading(true);
-      console.log(values);
+      // verifyOTP(values.matric);
+      getOTP();
       setTimeout(() => {
         setLoading(false);
         setSubmitting(false);
@@ -52,15 +130,18 @@ export default function Login() {
                 label="OTP"
                 name="otp"
                 placeholder="Enter OTP"
-                handleBlur={handleBlur}
-                handleChange={handleChange}
+                handleBlur={handleValidation}
+                handleChange={handleValidation}
+                value={validationData["otp"]}
                 type="text"
               />
 
               <Button
                 label="Submit"
-                type="submit"
-                OnClick={() => {}}
+                type="button"
+                OnClick={() => {
+                  verifyOTP(validationData.otp);
+                }}
                 disabled={isSubmitting}
                 loading={loading}
               />
@@ -101,6 +182,7 @@ export default function Login() {
             </form>
           </div>
         )}
+        <ToastContainer autoClose={2000} />
       </TextContainer>
     </AuthContainer>
   );
