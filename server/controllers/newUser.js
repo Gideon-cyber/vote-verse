@@ -3,7 +3,7 @@ import { Admin } from "../models/admin.js";
 import { BICSTUDENTS } from "../SampleData/sampledata.js";
 const CreateVoter = async (req, res) => {
   try {
-    //const load = BICSTUDENTS.map(
+    //  const load = BICSTUDENTS.map(
     // async ({ firstName, lastName, email, matric, admin }) => {
     const BIC = BICS.BIC;
     const { firstName, lastName, email, matric, admin } = req.body;
@@ -47,7 +47,7 @@ const CreateVoter = async (req, res) => {
             createdVoter: createdVoter,
             creator: adminThatCreatedThisVoter,
           });
-          console.log("Success");
+          // console.log("Success");
         } else {
           res.status(401).send({ message: "failed to create User" });
         }
@@ -85,7 +85,7 @@ export const FindAdminRegisteredVoters = async (req, res) => {
     const { admin } = req.body;
     //const user = await User.find({ email });
     const findAdmin = await Admin.findOne({ matric: admin });
-    console.log(findAdmin);
+    // console.log(findAdmin);
 
     if (findAdmin) {
       const AdminregVoters = findAdmin.registeredVoters;
