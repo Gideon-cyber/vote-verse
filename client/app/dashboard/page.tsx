@@ -33,7 +33,6 @@ const Dashboard = () => {
         const newData: { role: string; data: any }[] = sortByRole(
           response.data
         );
-        // console.log(newData);
         setCandidateData(newData);
       } else {
         toast.error(response.data.message);
@@ -51,14 +50,14 @@ const Dashboard = () => {
   const vote = async () => {
     const newData = {
       candidate1: votingData?.president,
-      candidate2: votingData?.vicePresident,
-      candidate3: votingData?.sport,
+      candidate2: votingData?.vicepresident,
+      candidate3: votingData?.sports,
       candidate4: votingData?.gensec,
       candidate5: votingData?.social,
       candidate6: votingData?.pro,
       candidate7: votingData?.finsec,
       candidate8: votingData?.treasurer,
-      candidate9: votingData?.AGS,
+      candidate9: votingData?.ags,
     };
     try {
       const response = await axiosInstance.post(`/updateThisUser`, {
@@ -151,7 +150,10 @@ const Dashboard = () => {
                   >
                     <div className="w-[100px] h-[100px] rounded-full bg-slate-400"></div>
                     <div className="flex items-center flex-col">
-                      <h3 className="font-semibold">
+                      <h3
+                        className="font-semibold"
+                        // onClick={() => console.log(votingData)}
+                      >
                         {item.firstName} {item.lastName}
                       </h3>
                       {user?.role === "admin" && (

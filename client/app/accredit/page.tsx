@@ -30,6 +30,7 @@ export default function Login() {
       });
 
       // Process the response data
+      console.log(response);
 
       if (response.status === 201) {
         toast.success(response.data.message);
