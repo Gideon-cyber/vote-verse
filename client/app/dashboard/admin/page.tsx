@@ -77,6 +77,12 @@ const Admin = () => {
                   scope="col"
                   className="pb-3.5 pr-3 text-left text-sm font-semibold text-gray-900 "
                 >
+                  No.
+                </th>
+                <th
+                  scope="col"
+                  className="pb-3.5 pr-3 text-left text-sm font-semibold text-gray-900 "
+                >
                   FirstName
                 </th>
                 <th
@@ -133,6 +139,9 @@ const Admin = () => {
                 voters?.map((voter: any, index: number) => {
                   return (
                     <tr key={index}>
+                      <td className="py-4 whitespace-normal pl-4 pr-3 sm:pl-6 md:pl-0 max-w-[308px]">
+                        {index + 1}
+                      </td>
                       <td className="py-4 whitespace-normal pl-4 pr-3 sm:pl-6 md:pl-0 max-w-[308px]">
                         {voter?.firstName}
                       </td>

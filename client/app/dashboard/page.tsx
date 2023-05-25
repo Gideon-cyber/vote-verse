@@ -33,6 +33,7 @@ const Dashboard = () => {
         const newData: { role: string; data: any }[] = sortByRole(
           response.data
         );
+        // console.log(newData);
         setCandidateData(newData);
       } else {
         toast.error(response.data.message);
@@ -82,6 +83,30 @@ const Dashboard = () => {
     }
   };
 
+  const FindThisVoter = async (params: null | string) => {
+    try {
+      const response = await axiosInstance.post(`/findThisUser`, {
+        parameter: params,
+      });
+      // Process the response data
+      // console.log(response);
+
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        // router.push("/login?id");
+      } else {
+        toast.error(response.data.message);
+      }
+
+      // Return any relevant data from the response
+      //   return response;
+    } catch (error: any) {
+      // Handle any errors that occur during the API call
+      console.error(error);
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   const sortByRole = (data: any) => {
     const keys = Object.entries(data);
     const sortedData = keys.map((key) => {
@@ -96,6 +121,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getAllCandidate();
+    FindThisVoter("null");
   }, []);
 
   //   console.log(candidateData);
@@ -128,6 +154,12 @@ const Dashboard = () => {
                       <h3 className="font-semibold">
                         {item.firstName} {item.lastName}
                       </h3>
+                      {user?.role === "admin" && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">Votes:</span>
+                          <span>{item?.vote}</span>
+                        </div>
+                      )}
                     </div>
                     {user?.role === "voter" && (
                       <div className="w-full px-5">
@@ -138,7 +170,10 @@ const Dashboard = () => {
                             const name = `${item.firstName} ${item.lastName}`;
                             toast.success(`You voted for ${name}`);
                             const key = data.role.toLowerCase();
-                            const newData = { ...votingData, [key]: name };
+                            const newData = {
+                              ...votingData,
+                              [key]: item.firstName,
+                            };
                             setVotingData(newData);
                           }}
                           // disabled={isSubmitting}
