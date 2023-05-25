@@ -15,6 +15,7 @@ import axiosInstance from "@/utils/axiosInstance";
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const [validationData, setValidationData] = useState({
     otp: "",
@@ -61,7 +62,9 @@ export default function Login() {
       // Process the response data
 
       if (response.status === 201) {
-        toast.success(response.data.message);
+        toast.success(response.data.message, {
+          autoClose: 2000000,
+        });
         // router.push("/dashboard");
       } else if (response.status === 403) {
         toast.error(response.data.message);
@@ -116,7 +119,7 @@ export default function Login() {
                 Email Verification
               </h1>
               <p className="text-grey-primary">
-                Enter the 6 digit OTP sent to your email address
+                Enter the 4 digit OTP sent to your email address
               </p>
             </div>
             <div className="flex items-start w-full gap-5 flex-col">
@@ -135,8 +138,9 @@ export default function Login() {
                 type="button"
                 OnClick={() => {
                   verifyOTP(validationData.otp);
+                  setIsDisabled(true);
                 }}
-                disabled={isSubmitting}
+                disabled={isDisabled}
                 loading={loading}
               />
             </div>
