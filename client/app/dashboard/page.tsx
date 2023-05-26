@@ -11,7 +11,8 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
-import { isEmpty } from "@/utils";
+import { capitalize, isEmpty } from "@/utils";
+import Image from "next/image";
 
 interface MyObject {
   [key: string]: any;
@@ -47,7 +48,7 @@ const Dashboard = () => {
         const updatedColors = [...prevColors];
         const currentColor = updatedColors[outerIndex][innerIndex];
         updatedColors[outerIndex][innerIndex] =
-          currentColor === "#CBD1D8" ? "green" : "#CBD1D8";
+          currentColor === "#e9ebee" ? "green" : "#e9ebee";
         return updatedColors;
       });
     } else {
@@ -62,7 +63,7 @@ const Dashboard = () => {
         if (selectedDivIndex !== -1) {
           const { outerIndex: prevOuterIndex, innerIndex: prevInnerIndex } =
             selectedDivs[selectedDivIndex];
-          updatedColors[prevOuterIndex][prevInnerIndex] = "#CBD1D8";
+          updatedColors[prevOuterIndex][prevInnerIndex] = "#e9ebee";
         }
         updatedColors[outerIndex][innerIndex] = "green";
         return updatedColors;
@@ -85,8 +86,6 @@ const Dashboard = () => {
         const newData: { role: string; data: any }[] = sortByRole(
           response.data
         );
-
-        console.log(newData);
 
         updateCandidateData(newData).then(() => setReload(!reload));
       } else {
@@ -163,9 +162,7 @@ const Dashboard = () => {
         parameter: params,
       });
       // Process the response data
-      console.log(response);
       const nullCount = countNullValuesByKeys(response?.data?.users);
-      console.log(nullCount);
       setUndecidedVotes(nullCount);
 
       if (response.status === 200) {
@@ -224,7 +221,7 @@ const Dashboard = () => {
   useEffect(() => {
     setDivColors((prevColors) => {
       const newColors = candidateData.map((obj: any) =>
-        Array(obj.data.length).fill("#CBD1D8")
+        Array(obj.data.length).fill("#e9ebee")
       );
       return prevColors.length === 0 ? newColors : prevColors;
     });
@@ -244,7 +241,15 @@ const Dashboard = () => {
               className="flex flex-col gap-2 min-h-[200px] overflow-x-scroll w-full"
               key={outerIndex}
             >
-              <h1 className="text-[20px] font-semibold">{data.role}</h1>
+              <h1 className="text-[20px] font-semibold">
+                {data.role === "ags"
+                  ? "Assistant Gen. Sec"
+                  : data.role === "finsec"
+                  ? "Financial Sec."
+                  : data.role === "gensec"
+                  ? "General Sec."
+                  : capitalize(data.role)}
+              </h1>
               <div className="flex gap-2 items-center w-[90%]">
                 {data.data?.map((item: any, innerIndex: number) => (
                   <div
@@ -255,12 +260,16 @@ const Dashboard = () => {
                         divColors[outerIndex]?.[innerIndex] || "",
                     }}
                   >
-                    <div className="w-[100px] h-[100px] rounded-full bg-slate-400"></div>
+                    <div className="w-[100px] h-[100px] rounded-full bg-slate-400 flex items-center justify-center overflow-hidden">
+                      <Image
+                        src="/images/placeholder.jpg"
+                        alt="placeholder"
+                        width={120}
+                        height={120}
+                      />
+                    </div>
                     <div className="flex items-center flex-col">
-                      <h3
-                        className="font-semibold"
-                        onClick={() => console.log(votingData)}
-                      >
+                      <h3 className="font-semibold">
                         {item.firstName} {item.lastName}
                       </h3>
                       {user?.role === "admin" && (
@@ -276,16 +285,6 @@ const Dashboard = () => {
                           label="Vote"
                           type="button"
                           OnClick={() => {
-                            // const name = `${item.firstName} ${item.lastName}`;
-                            // toast.success(
-                            //   `You selected ${name} for ${data.role}`
-                            // );
-                            // const key = data.role.toLowerCase();
-                            // const newData = {
-                            //   ...votingData,
-                            //   [key]: item.firstName,
-                            // };
-                            // setVotingData(newData);
                             toggleKeyValuePair(
                               votingData,
                               data.role,

@@ -72,7 +72,7 @@ const Sidebar = () => {
   const wrapperClasses = classNames(
     "h-screen px-4 pt-8 pb-4 bg-white shadow-ld border-r-2  flex justify-between flex-col",
     {
-      ["w-80"]: !toggleCollapse,
+      ["w-80 absolute left-0 top-0 md:relative"]: !toggleCollapse,
       ["w-20"]: toggleCollapse,
     }
   );
@@ -88,7 +88,8 @@ const Sidebar = () => {
     return classNames(
       "flex items-center cursor-pointer hover:bg-grey-light rounded w-full overflow-hidden whitespace-nowrap",
       {
-        ["bg-blue-secondary text-white font-bold"]: activeMenu?.id === menu.id,
+        ["bg-blue-secondary text-white font-bold gap-4"]:
+          activeMenu?.id === menu.id,
       }
     );
   };
@@ -146,7 +147,7 @@ const Sidebar = () => {
             return (
               <div key={menu?.id} className={classes}>
                 <Link href={menu.link}>
-                  <div className="flex py-4 px-3 items-center w-full h-full md:gap-4">
+                  <div className="flex py-4 px-3 items-center w-full h-full gap-4">
                     <div>
                       {" "}
                       <Icon
