@@ -13,6 +13,10 @@ import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import { isEmpty } from "@/utils";
 
+interface MyObject {
+  [key: string]: any;
+}
+
 const Dashboard = () => {
   const router = useRouter();
   const { user } = useAppSelector((state) => state.user);
@@ -23,6 +27,54 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [candidateData, setCandidateData] = useState([] as any);
   const [votingData, setVotingData] = useState({} as any);
+  const [undecidedVotes, setUndecidedVotes] = useState([] as any);
+  const [divColors, setDivColors] = useState([] as any[]);
+  const [reload, setReload] = useState(false);
+
+  const [selectedDivs, setSelectedDivs] = useState([] as any[]);
+
+  const toggleBG = (outerIndex: number, innerIndex: number) => {
+    const selectedDivIndex = selectedDivs.findIndex(
+      (div: any) => div.outerIndex === outerIndex
+    );
+
+    if (
+      selectedDivIndex !== -1 &&
+      selectedDivs[selectedDivIndex].innerIndex === innerIndex
+    ) {
+      // Toggle between black and green if the same div is clicked twice
+      setDivColors((prevColors) => {
+        const updatedColors = [...prevColors];
+        const currentColor = updatedColors[outerIndex][innerIndex];
+        updatedColors[outerIndex][innerIndex] =
+          currentColor === "#CBD1D8" ? "green" : "#CBD1D8";
+        return updatedColors;
+      });
+    } else {
+      // Update the selected div and reset previously selected div's background color within the same array
+      const updatedSelectedDivs: any = selectedDivs.filter(
+        (div: any) => div.outerIndex !== outerIndex
+      );
+      updatedSelectedDivs.push({ outerIndex, innerIndex });
+
+      setDivColors((prevColors) => {
+        const updatedColors = [...prevColors];
+        if (selectedDivIndex !== -1) {
+          const { outerIndex: prevOuterIndex, innerIndex: prevInnerIndex } =
+            selectedDivs[selectedDivIndex];
+          updatedColors[prevOuterIndex][prevInnerIndex] = "#CBD1D8";
+        }
+        updatedColors[outerIndex][innerIndex] = "green";
+        return updatedColors;
+      });
+
+      setSelectedDivs(updatedSelectedDivs);
+    }
+  };
+
+  const updateCandidateData = async (newData: any[]) => {
+    setCandidateData(newData);
+  };
 
   const getAllCandidate = async () => {
     try {
@@ -33,7 +85,10 @@ const Dashboard = () => {
         const newData: { role: string; data: any }[] = sortByRole(
           response.data
         );
-        setCandidateData(newData);
+
+        console.log(newData);
+
+        updateCandidateData(newData).then(() => setReload(!reload));
       } else {
         toast.error(response.data.message);
       }
@@ -82,13 +137,36 @@ const Dashboard = () => {
     }
   };
 
+  const countNullValuesByKeys = (data: any[]) => {
+    const counts = {} as any;
+
+    data.forEach((obj) => {
+      const keys = Object.keys(obj);
+
+      keys.forEach((key) => {
+        if (obj[key] === "null") {
+          if (counts[key]) {
+            counts[key]++;
+          } else {
+            counts[key] = 1;
+          }
+        }
+      });
+    });
+
+    return Object.entries(counts);
+  };
+
   const FindThisVoter = async (params: null | string) => {
     try {
       const response = await axiosInstance.post(`/findThisUser`, {
         parameter: params,
       });
       // Process the response data
-      // console.log(response);
+      console.log(response);
+      const nullCount = countNullValuesByKeys(response?.data?.users);
+      console.log(nullCount);
+      setUndecidedVotes(nullCount);
 
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -118,14 +196,39 @@ const Dashboard = () => {
     return sortedData;
   };
 
+  const toggleKeyValuePair = (
+    obj: MyObject,
+    key: string,
+    value: any
+  ): MyObject => {
+    const newKey = key.toLowerCase();
+    const updatedObj = { ...obj };
+
+    if (updatedObj[newKey] === value) {
+      delete updatedObj[newKey];
+      toast.error(`You unselected ${value} for ${key}`);
+    } else {
+      updatedObj[newKey] = value;
+      toast.success(`You selected ${value} for ${key}`);
+    }
+
+    setVotingData(updatedObj);
+    return updatedObj;
+  };
+
   useEffect(() => {
     getAllCandidate();
     FindThisVoter("null");
   }, []);
 
-  //   console.log(candidateData);
-  //   const sortedData = sortByRole(candidateData);
-  //   console.log(sortedData);
+  useEffect(() => {
+    setDivColors((prevColors) => {
+      const newColors = candidateData.map((obj: any) =>
+        Array(obj.data.length).fill("#CBD1D8")
+      );
+      return prevColors.length === 0 ? newColors : prevColors;
+    });
+  }, [reload]);
 
   return (
     <div className="overflow-y-scroll p-4 md:p-6 h-full w-full  text-black">
@@ -136,23 +239,27 @@ const Dashboard = () => {
         </div>
       ) : (
         candidateData?.map(
-          (data: { role: string; data: any }, index: number) => (
+          (data: { role: string; data: any }, outerIndex: number) => (
             <div
-              className="flex flex-col gap-2 min-h-[200px] overflow-x-scroll"
-              key={index}
+              className="flex flex-col gap-2 min-h-[200px] overflow-x-scroll w-full"
+              key={outerIndex}
             >
               <h1 className="text-[20px] font-semibold">{data.role}</h1>
-              <div className="flex gap-2 items-center w-full">
-                {data.data?.map((item: any, index: number) => (
+              <div className="flex gap-2 items-center w-[90%]">
+                {data.data?.map((item: any, innerIndex: number) => (
                   <div
-                    key={index}
-                    className="flex items-center flex-col min-w-[300px] bg-off-white rounded-lg py-4 gap-2 mb-4"
+                    key={innerIndex}
+                    className="flex items-center flex-col min-w-[250px] rounded-lg py-4 gap-2 mb-4"
+                    style={{
+                      backgroundColor:
+                        divColors[outerIndex]?.[innerIndex] || "",
+                    }}
                   >
                     <div className="w-[100px] h-[100px] rounded-full bg-slate-400"></div>
                     <div className="flex items-center flex-col">
                       <h3
                         className="font-semibold"
-                        // onClick={() => console.log(votingData)}
+                        onClick={() => console.log(votingData)}
                       >
                         {item.firstName} {item.lastName}
                       </h3>
@@ -169,14 +276,22 @@ const Dashboard = () => {
                           label="Vote"
                           type="button"
                           OnClick={() => {
-                            const name = `${item.firstName} ${item.lastName}`;
-                            toast.success(`You voted for ${name}`);
-                            const key = data.role.toLowerCase();
-                            const newData = {
-                              ...votingData,
-                              [key]: item.firstName,
-                            };
-                            setVotingData(newData);
+                            // const name = `${item.firstName} ${item.lastName}`;
+                            // toast.success(
+                            //   `You selected ${name} for ${data.role}`
+                            // );
+                            // const key = data.role.toLowerCase();
+                            // const newData = {
+                            //   ...votingData,
+                            //   [key]: item.firstName,
+                            // };
+                            // setVotingData(newData);
+                            toggleKeyValuePair(
+                              votingData,
+                              data.role,
+                              item.firstName
+                            );
+                            toggleBG(outerIndex, innerIndex);
                           }}
                           // disabled={isSubmitting}
                           loading={false}
@@ -201,6 +316,22 @@ const Dashboard = () => {
           // disabled={isSubmitting}
           loading={false}
         />
+      )}
+
+      {user?.role === "admin" && (
+        <div className="flex flex-col gap-2">
+          <h3 className="text-[24px] leading-[30px] font-bold">
+            Undecided/Null Votes
+          </h3>
+          <div className="flex flex-col">
+            {undecidedVotes.map((undecidedVote: any[], index: number) => (
+              <div key={index} className="flex items-center gap-2">
+                <span className="font-bold">{undecidedVote[0]}:</span>
+                <span>{undecidedVote[1]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
       <ToastContainer autoClose={2000} />
     </div>

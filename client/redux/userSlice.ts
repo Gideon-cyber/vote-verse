@@ -7,6 +7,7 @@ interface UserState {
   user: {
     matric?: string;
     role?: string;
+    firstName?: string;
   };
 }
 
