@@ -100,11 +100,12 @@ export default function Login() {
       setSubmitting(true);
       setLoading(true);
       // verifyOTP(values.matric);
-      getOTP();
+      // getOTP();
+      toast.error("Accreditation has now ended");
       setTimeout(() => {
         setLoading(false);
         setSubmitting(false);
-        setShowOTP(true);
+        // setShowOTP(true);
       }, 3000);
       //   setSubmitting(false);
     },
