@@ -197,7 +197,8 @@ export default function Login() {
                   label="Login"
                   type="submit"
                   OnClick={() => {
-                    voterLogin(voterData.matric);
+                    // voterLogin(voterData.matric);
+                    toast.error("Voting has ended");
                   }}
                   loading={loading}
                 />
