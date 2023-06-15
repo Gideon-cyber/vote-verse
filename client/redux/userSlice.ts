@@ -9,6 +9,7 @@ interface UserState {
     role?: string;
     firstName?: string;
   };
+  newValuesObject?: {};
 }
 
 // Define the initial state using that type
@@ -27,10 +28,13 @@ export const userSlice = createSlice({
     logout: (state) => {
       state.user = {};
     },
+    addNewValuesObject: (state, action: PayloadAction<any>) => {
+      state.newValuesObject = action.payload;
+    },
   },
 });
 
-export const { addUser, logout } = userSlice.actions;
+export const { addUser, logout, addNewValuesObject } = userSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 // export const selectCount = (state: RootState) => state.counter.value

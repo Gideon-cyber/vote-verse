@@ -261,12 +261,22 @@ const Dashboard = () => {
                     }}
                   >
                     <div className="w-[100px] h-[100px] rounded-full bg-slate-400 flex items-center justify-center overflow-hidden">
+                      {item?.image ? (
+                        <Image
+                        src={item?.image}
+                        alt="placeholder"
+                        width={120}
+                        height={120}
+                        />
+                      ): (
+
                       <Image
                         src="/images/placeholder.jpg"
                         alt="placeholder"
                         width={120}
                         height={120}
                       />
+                      )}
                     </div>
                     <div className="flex items-center flex-col">
                       <h3 className="font-semibold">

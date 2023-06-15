@@ -14,15 +14,18 @@ import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import axiosInstance from "@/utils/axiosInstance";
 import { isEmpty } from "@/utils";
+import { addNewValuesObject } from "@/redux/userSlice";
 
 export default function Admin() {
   const router = useRouter();
-  const { user } = useAppSelector((state) => state.user);
+  const { user, newValuesObject } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   useEffect(() => {
     isEmpty(user) === true && router.push("/login");
   }, [user]);
 
-  const addCandidate = async () => {
+  const addCandidate = async (values: any) => {
+    console.log(values);
     try {
       const response = await axiosInstance.post(`/candidate`, {
         ...values,
@@ -30,7 +33,7 @@ export default function Admin() {
       });
 
       // Process the response data
-
+      console.log(response);
       if (response.status === 201) {
         toast.success("Candidate added successfully");
         values.firstName = "";
@@ -95,39 +98,73 @@ export default function Admin() {
 
   const nav = ["Add Candidate", "Add Voter"];
   const [selected, setSelected] = useState(0);
+  const [uploadedImage, setUploadedImage] = useState("" as any);
+  const [imageLink, setImageLink] = useState("");
+  const [valuesObject, setValuesObject] = useState({} as any);
 
-  const { values, handleBlur, handleChange, handleSubmit, isSubmitting } =
-    useFormik({
-      initialValues: {
-        firstName: "",
-        lastName: "",
-        matric: "",
-        level: "",
-        email: "",
-        phone: "",
-        office: "",
-        description: "",
-      },
-      onSubmit: (values, { resetForm }) => {
-        addCandidate();
-        resetForm({
-          values: {
-            firstName: "",
-            lastName: "",
-            matric: "",
-            level: "",
-            email: "",
-            phone: "",
-            office: "",
-            description: "",
-          },
-        });
-      },
-    });
+  const {
+    values,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    isSubmitting,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      matric: "",
+      level: "",
+      email: "",
+      phone: "",
+      office: "",
+      department: "",
+      description: "",
+    },
+    onSubmit: async (values, { resetForm }) => {
+      if (uploadedImage !== "") {
+        await uploadImage(uploadedImage);
+      }
+      // addCandidate();
+      resetForm({
+        values: {
+          firstName: "",
+          lastName: "",
+          matric: "",
+          level: "",
+          email: "",
+          phone: "",
+          office: "",
+          department: "",
+          description: "",
+        },
+      });
+    },
+  });
 
   const handleValidation = (e: any) => {
     const { name, value } = e.target;
     setValidationData(() => ({ ...validationData, [name]: value }));
+  };
+
+  const uploadImage = async (files: any) => {
+    const formData = new FormData();
+    formData.append("file", files);
+    formData.append("upload_preset", "elwz3bl2");
+
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/depqqbyyn/image/upload",
+        formData
+      );
+
+      setImageLink(res.data.url);
+      const newObject = { ...values, image: res.data.url };
+      addCandidate({ ...values, image: res.data.url });
+      return res.data.url;
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="overflow-y-scroll p-4 md:p-6 h-full w-full md:w-1/2 text-black flex items-start flex-col gap-3">
@@ -230,6 +267,29 @@ export default function Admin() {
             handleChange={handleChange}
             value={values["description"]}
             type="text"
+          />
+
+          <InputField
+            label="Department"
+            name="department"
+            placeholder="e.g Biochemistry"
+            handleBlur={handleBlur}
+            handleChange={handleChange}
+            value={values["department"]}
+            type="text"
+          />
+
+          <InputField
+            label="Image"
+            name="image"
+            placeholder=""
+            handleChange={(e) => {
+              if (e?.target?.files !== null) {
+                setUploadedImage(e?.target?.files[0]);
+                console.log(e?.target?.files[0]);
+              }
+            }}
+            type="file"
           />
 
           <Button
