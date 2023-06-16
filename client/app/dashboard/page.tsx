@@ -251,6 +251,10 @@ const Dashboard = () => {
                   ? "Financial Sec."
                   : data.role === "gensec"
                   ? "General Sec."
+                  : data.role === "specialDuties"
+                  ? "Special Duties Officer"
+                  : data.role === "vicepresident"
+                  ? "Vice President"
                   : capitalize(data.role)}
               </h1>
               <div className="flex gap-2 items-center w-[90%]">
