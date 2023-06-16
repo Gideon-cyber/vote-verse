@@ -261,7 +261,7 @@ const Dashboard = () => {
                 {data.data?.map((item: any, innerIndex: number) => (
                   <div
                     key={innerIndex}
-                    className="flex items-center flex-col min-w-[200px] rounded-lg py-4 gap-2 mb-4"
+                    className="flex items-center flex-col min-w-[200px] rounded-lg p-4 gap-2 mb-4"
                     style={{
                       backgroundColor:
                         divColors[outerIndex]?.[innerIndex] || "",
@@ -285,7 +285,7 @@ const Dashboard = () => {
                       )}
                     </div>
                     <div className="flex items-center flex-col">
-                      <h3 className="font-semibold">
+                      <h3 className="font-semibold text-center">
                         {item.firstName} {item.lastName}
                       </h3>
                       {user?.role === "admin" && (
