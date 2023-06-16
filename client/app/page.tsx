@@ -40,7 +40,6 @@ export default function Home() {
       password: "",
     },
     onSubmit: (values) => {
-      console.log(values);
       setSubmitting(false);
       //   setSubmitting(false);
     },

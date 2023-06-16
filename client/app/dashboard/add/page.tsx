@@ -25,7 +25,6 @@ export default function Admin() {
   }, [user]);
 
   const addCandidate = async (values: any) => {
-    console.log(values);
     try {
       const response = await axiosInstance.post(`/candidate`, {
         ...values,
@@ -33,7 +32,6 @@ export default function Admin() {
       });
 
       // Process the response data
-      console.log(response);
       if (response.status === 201) {
         toast.success("Candidate added successfully");
         values.firstName = "";
@@ -286,7 +284,6 @@ export default function Admin() {
             handleChange={(e) => {
               if (e?.target?.files !== null) {
                 setUploadedImage(e?.target?.files[0]);
-                console.log(e?.target?.files[0]);
               }
             }}
             type="file"

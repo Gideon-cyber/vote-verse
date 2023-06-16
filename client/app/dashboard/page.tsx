@@ -105,13 +105,16 @@ const Dashboard = () => {
     const newData = {
       candidate1: votingData?.president,
       candidate2: votingData?.vicepresident,
-      candidate3: votingData?.sports,
+      // candidate3: votingData?.sports,
       candidate4: votingData?.gensec,
-      candidate5: votingData?.social,
+      // candidate5: votingData?.social,
       candidate6: votingData?.pro,
       candidate7: votingData?.finsec,
       candidate8: votingData?.treasurer,
       candidate9: votingData?.ags,
+      candidate10: votingData?.specialduties,
+      candidate11: votingData?.flc1,
+      candidate12: votingData?.flc2,
     };
     try {
       const response = await axiosInstance.post(`/updateThisUser`, {
@@ -261,21 +264,20 @@ const Dashboard = () => {
                     }}
                   >
                     <div className="w-[100px] h-[100px] rounded-full bg-slate-400 flex items-center justify-center overflow-hidden">
-                      {item?.image ? (
+                      {item?.image !== "" ? (
                         <Image
-                        src={item?.image}
-                        alt="placeholder"
-                        width={120}
-                        height={120}
+                          src={item?.image}
+                          alt="placeholder"
+                          width={120}
+                          height={120}
                         />
-                      ): (
-
-                      <Image
-                        src="/images/placeholder.jpg"
-                        alt="placeholder"
-                        width={120}
-                        height={120}
-                      />
+                      ) : (
+                        <Image
+                          src="/images/placeholder.jpg"
+                          alt="placeholder"
+                          width={120}
+                          height={120}
+                        />
                       )}
                     </div>
                     <div className="flex items-center flex-col">

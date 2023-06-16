@@ -26,7 +26,6 @@ export default function Login() {
       });
 
       // Process the response data
-      console.log(response.data);
 
       if (response?.data?.success === true) {
         toast.success(response?.data?.message);
@@ -63,7 +62,6 @@ export default function Login() {
     },
     onSubmit: (values) => {
       setLoading(true);
-      console.log(values);
       register();
       setLoading(false);
       values.firstName = "";
