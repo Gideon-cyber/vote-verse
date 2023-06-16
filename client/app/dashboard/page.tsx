@@ -164,6 +164,7 @@ const Dashboard = () => {
       const response = await axiosInstance.post(`/findThisUser`, {
         parameter: params,
       });
+
       // Process the response data
       const nullCount = countNullValuesByKeys(response?.data?.users);
       setUndecidedVotes(nullCount);
@@ -326,6 +327,7 @@ const Dashboard = () => {
           label="Cast/submit Vote"
           type="button"
           OnClick={() => {
+            // toast.error("Election has ended");
             vote();
           }}
           // disabled={isSubmitting}

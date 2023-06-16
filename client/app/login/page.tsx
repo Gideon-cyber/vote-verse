@@ -169,6 +169,7 @@ export default function Login() {
                 label="Validate OTP"
                 type="button"
                 OnClick={() => {
+                  // toast.error("Election has ended");
                   verifyOTP(validationData.otp);
                 }}
               />
