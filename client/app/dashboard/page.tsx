@@ -327,8 +327,8 @@ const Dashboard = () => {
           label="Cast/submit Vote"
           type="button"
           OnClick={() => {
-            // toast.error("Election has ended");
-            vote();
+            toast.error("Election has ended");
+            // vote();
           }}
           // disabled={isSubmitting}
           loading={false}
