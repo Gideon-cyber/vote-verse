@@ -335,7 +335,7 @@ const Dashboard = () => {
         />
       )}
 
-      {user?.role === "admin" && (
+      {/* {user?.role === "admin" && (
         <div className="flex flex-col gap-2">
           <h3 className="text-[24px] leading-[30px] font-bold">
             Undecided/Null Votes
@@ -349,7 +349,7 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
-      )}
+      )} */}
       <ToastContainer autoClose={2000} />
     </div>
   );
