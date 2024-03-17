@@ -12,6 +12,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { isEmpty } from "@/utils";
+import AdminFunctions from "@/components/dashboard/AdminFunctions";
 
 const Admin = () => {
   const router = useRouter();
@@ -53,6 +54,8 @@ const Admin = () => {
 
   return (
     <div className="overflow-y-scroll p-4 md:p-6 h-full w-full text-black flex items-start flex-col gap-3">
+      <AdminFunctions />
+
       <div className="w-full flex gap-2">
         {nav.map((item, index) => (
           <div key={index}>
@@ -83,14 +86,9 @@ const Admin = () => {
                   scope="col"
                   className="pb-3.5 pr-3 text-left text-sm font-semibold text-gray-900 "
                 >
-                  FirstName
+                  Name
                 </th>
-                <th
-                  scope="col"
-                  className="pb-3.5 px-3 text-left text-sm font-semibold text-gray-900"
-                >
-                  Last Name
-                </th>
+
                 <th
                   scope="col"
                   className="pb-3.5 px-3 text-left text-sm font-semibold text-gray-900"
@@ -143,11 +141,9 @@ const Admin = () => {
                         {index + 1}
                       </td>
                       <td className="py-4 whitespace-normal pl-4 pr-3 sm:pl-6 md:pl-0 max-w-[308px]">
-                        {voter?.firstName}
+                        {voter?.name}
                       </td>
-                      <td className="whitespace-nowrap py-4 px-3">
-                        {voter?.lastName}
-                      </td>
+
                       <td className="whitespace-nowrap py-4 px-3 leading-[18px] text-background-color">
                         {voter?.email}
                       </td>

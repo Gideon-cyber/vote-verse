@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <div className="h-[70px] md:h-[80px] w-full shadow-lg flex items-center justify-end">
       <span className="text-[20px] font-semibold text-blue-primary mr-4">
-        Welcome {user?.firstName}
+        Welcome {user?.role === "admin" ? user?.firstName : user?.name}
       </span>
     </div>
   );

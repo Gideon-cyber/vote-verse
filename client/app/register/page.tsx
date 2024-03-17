@@ -21,7 +21,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const register = async () => {
     try {
-      const response = await axiosInstance.post(`/registeradmin`, {
+      const response = await axiosInstance.post(`/registerAdmin`, {
         ...values,
       });
 

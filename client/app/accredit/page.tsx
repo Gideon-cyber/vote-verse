@@ -6,13 +6,13 @@ import AuthContainer from "@/components/login/AuthContainer";
 import TextContainer from "@/components/login/TextContainer";
 import { useFormik } from "formik";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import axiosInstance from "@/utils/axiosInstance";
 
-export default function Login() {
+export default function Accredit() {
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -20,6 +20,8 @@ export default function Login() {
   const [validationData, setValidationData] = useState({
     otp: "",
   });
+
+  const [accreditationStatus, setAccreditationStatus] = useState("true");
 
   const getOTP = async () => {
     const data = {
@@ -80,6 +82,29 @@ export default function Login() {
     }
   };
 
+  const getAccreditationStatus = async () => {
+    try {
+      const response = await axiosInstance.get(`/accredit/status`);
+      // Process the response data
+      if (response.status === 200 || response?.data?.has_error === false) {
+        setAccreditationStatus(response.data.is_accredit.toString());
+        if (response.data.is_accredit === false) {
+          toast.error("Accreditation has ended");
+        }
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      // Handle any errors that occur during the API call
+      console.error(error);
+      toast.error(error?.message);
+    }
+  };
+
+  useEffect(() => {
+    getAccreditationStatus();
+  });
+
   const handleValidation = (e: any) => {
     const { name, value } = e.target;
     setValidationData(() => ({ ...validationData, [name]: value }));
@@ -100,12 +125,14 @@ export default function Login() {
       setSubmitting(true);
       setLoading(true);
       // verifyOTP(values.matric);
-      // getOTP();
-      toast.error("Accreditation has now ended");
+      accreditationStatus === "true" && getOTP();
+      // toast.error("Accreditation has now ended");
       setTimeout(() => {
         setLoading(false);
         setSubmitting(false);
-        // setShowOTP(true);
+        accreditationStatus === "true" && setShowOTP(true);
+        accreditationStatus === "false" &&
+          toast.error("Accreditation has ended");
       }, 3000);
       //   setSubmitting(false);
     },

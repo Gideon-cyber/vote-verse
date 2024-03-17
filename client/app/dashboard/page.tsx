@@ -258,11 +258,11 @@ const Dashboard = () => {
                   ? "Vice President"
                   : capitalize(data.role)}
               </h1>
-              <div className="flex gap-2 items-center w-[90%]">
+              <div className="flex flex-col gap-2 items-center w-full md:flex-row">
                 {data.data?.map((item: any, innerIndex: number) => (
                   <div
                     key={innerIndex}
-                    className="flex items-center flex-col min-w-[200px] rounded-lg p-4 gap-2 mb-4"
+                    className="flex items-center flex-col min-w-[200px] rounded-lg p-4 gap-2 mb-4 "
                     style={{
                       backgroundColor:
                         divColors[outerIndex]?.[innerIndex] || "",

@@ -67,8 +67,7 @@ export default function Admin() {
       if (response.status === 200) {
         toast.success("Voter added successfully");
 
-        validationData.firstName = "";
-        validationData.lastName = "";
+        validationData.name = "";
         validationData.email = "";
         validationData.matric = "";
         setValidationData(() => {
@@ -88,8 +87,7 @@ export default function Admin() {
   };
 
   const [validationData, setValidationData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     matric: "",
   });
@@ -300,22 +298,12 @@ export default function Admin() {
       ) : (
         <div className="flex items-start w-full gap-5 flex-col">
           <InputField
-            label="First Name"
-            name="firstName"
+            label="Name"
+            name="name"
             placeholder="eg. Adebayo"
             handleBlur={handleValidation}
             handleChange={handleValidation}
-            value={validationData["firstName"] || ""}
-            type="text"
-          />
-
-          <InputField
-            label="Last Name"
-            name="lastName"
-            placeholder="eg. Richard"
-            handleBlur={handleValidation}
-            handleChange={handleValidation}
-            value={validationData["lastName"] || ""}
+            value={validationData["name"] || ""}
             type="text"
           />
 

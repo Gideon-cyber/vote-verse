@@ -8,6 +8,7 @@ interface UserState {
     matric?: string;
     role?: string;
     firstName?: string;
+    name?: string;
   };
   newValuesObject?: {};
 }
