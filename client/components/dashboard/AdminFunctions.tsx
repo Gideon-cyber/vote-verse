@@ -95,7 +95,7 @@ const AdminFunctions = () => {
   });
 
   return (
-    <div className="flex items-center flex-row justify-between gap-2 w-full">
+    <div className="flex items-center flex-col md:flex-row justify-between gap-2 w-full">
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-1">
           <h2 className="text-base font-bold">Accreditation Status: </h2>
