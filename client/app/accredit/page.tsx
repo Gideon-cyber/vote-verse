@@ -88,9 +88,9 @@ export default function Accredit() {
       // Process the response data
       if (response.status === 200 || response?.data?.has_error === false) {
         setAccreditationStatus(response.data.is_accredit.toString());
-        if (response.data.is_accredit === false) {
-          toast.error("Accreditation has ended");
-        }
+        // if (response.data.is_accredit === false) {
+        //   toast.error("Accreditation has ended");
+        // }
       } else {
         toast.error(response.data.message);
       }
