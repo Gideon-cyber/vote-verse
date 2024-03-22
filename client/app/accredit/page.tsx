@@ -82,24 +82,24 @@ export default function Accredit() {
     }
   };
 
-  const getAccreditationStatus = async () => {
-    try {
-      const response = await axiosInstance.get(`/accredit/status`);
-      // Process the response data
-      if (response.status === 200 || response?.data?.has_error === false) {
-        setAccreditationStatus(response.data.is_accredit.toString());
-        // if (response.data.is_accredit === false) {
-        //   toast.error("Accreditation has ended");
-        // }
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error: any) {
-      // Handle any errors that occur during the API call
-      console.error(error);
-      toast.error(error?.message);
-    }
-  };
+  // const getAccreditationStatus = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(`/accredit/status`);
+  //     // Process the response data
+  //     if (response.status === 200 || response?.data?.has_error === false) {
+  //       setAccreditationStatus(response.data.is_accredit.toString());
+  //       // if (response.data.is_accredit === false) {
+  //       //   toast.error("Accreditation has ended");
+  //       // }
+  //     } else {
+  //       toast.error(response.data.message);
+  //     }
+  //   } catch (error: any) {
+  //     // Handle any errors that occur during the API call
+  //     console.error(error);
+  //     toast.error(error?.message);
+  //   }
+  // };
 
   // useEffect(() => {
   //   getAccreditationStatus();
@@ -125,14 +125,14 @@ export default function Accredit() {
       setSubmitting(true);
       setLoading(true);
       // verifyOTP(values.matric);
-      getOTP();
+      accreditationStatus === "true" && getOTP();
       // toast.error("Accreditation has now ended");
       setTimeout(() => {
         setLoading(false);
         setSubmitting(false);
-        setShowOTP(true);
-        // accreditationStatus === "false" &&
-        //   toast.error("Accreditation has ended");
+        accreditationStatus === "true" && setShowOTP(true);
+        accreditationStatus === "false" &&
+          toast.error("Accreditation has ended");
       }, 3000);
       //   setSubmitting(false);
     },
