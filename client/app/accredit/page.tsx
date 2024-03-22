@@ -101,9 +101,9 @@ export default function Accredit() {
     }
   };
 
-  useEffect(() => {
-    getAccreditationStatus();
-  });
+  // useEffect(() => {
+  //   getAccreditationStatus();
+  // });
 
   const handleValidation = (e: any) => {
     const { name, value } = e.target;
@@ -125,14 +125,14 @@ export default function Accredit() {
       setSubmitting(true);
       setLoading(true);
       // verifyOTP(values.matric);
-      accreditationStatus === "true" && getOTP();
+      getOTP();
       // toast.error("Accreditation has now ended");
       setTimeout(() => {
         setLoading(false);
         setSubmitting(false);
-        accreditationStatus === "true" && setShowOTP(true);
-        accreditationStatus === "false" &&
-          toast.error("Accreditation has ended");
+        setShowOTP(true);
+        // accreditationStatus === "false" &&
+        //   toast.error("Accreditation has ended");
       }, 3000);
       //   setSubmitting(false);
     },

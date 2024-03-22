@@ -54,7 +54,7 @@ const Admin = () => {
 
   return (
     <div className="overflow-y-scroll p-4 md:p-6 h-full w-full text-black flex items-start flex-col gap-3">
-      <AdminFunctions />
+      {/* <AdminFunctions /> */}
 
       <div className="w-full flex gap-2">
         {nav.map((item, index) => (

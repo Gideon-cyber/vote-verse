@@ -44,25 +44,25 @@ export default function Login() {
 
   const [votingStatus, setVotingStatus] = useState("false");
 
-  const getVotingStatus = async () => {
-    try {
-      const response = await axiosInstance.get(`/vote/status`);
-      // Process the response data
-      if (response.status === 200 || response?.data?.has_error === false) {
-        setVotingStatus(response.data.can_vote.toString());
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error: any) {
-      // Handle any errors that occur during the API call
-      console.error(error);
-      toast.error(error?.message);
-    }
-  };
+  // const getVotingStatus = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(`/vote/status`);
+  //     // Process the response data
+  //     if (response.status === 200 || response?.data?.has_error === false) {
+  //       setVotingStatus(response.data.can_vote.toString());
+  //     } else {
+  //       toast.error(response.data.message);
+  //     }
+  //   } catch (error: any) {
+  //     // Handle any errors that occur during the API call
+  //     console.error(error);
+  //     toast.error(error?.message);
+  //   }
+  // };
 
-  useEffect(() => {
-    getVotingStatus();
-  });
+  // useEffect(() => {
+  //   getVotingStatus();
+  // });
 
   const login = async (email: string, password: string) => {
     try {
